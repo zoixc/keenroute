@@ -1,9 +1,9 @@
 name: Build and Push Docker Hub Image
 
 on:
-  push:
-    branches:
-      - main
+  #push:
+    #branches:
+      #- main
   workflow_dispatch:
 
 jobs:
@@ -27,6 +27,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             ptabi/keenroute:latest
            # ptabi/keenroute:${{ github.sha }}
