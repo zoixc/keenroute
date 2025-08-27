@@ -19,35 +19,29 @@
 <div class="container">
   <h2>Keenroute</h2>
   <form method="post" onsubmit="saveForm()">
-    
-    <div class="form-group">
-      <label for="domains">Домены (по одному в строке):</label>
-      <textarea name="domains" id="domains">{{ domains }}</textarea>
-    </div>
+    <label>Домены (по одному в строке):</label>
+    <textarea name="domains" id="domains">{{ domains }}</textarea>
 
-    <div class="form-group">
-      <label for="route_type">Тип маршрута:</label>
-      <select name="route_type" id="route_type">
-        <option value="host" {% if route_type=="host" %}selected{% endif %}>Host (узел)</option>
-        <option value="network" {% if route_type=="network" %}selected{% endif %}>Network (сеть)</option>
-        <option value="default" {% if route_type=="default" %}selected{% endif %}>Default (по умолчанию)</option>
-      </select>
-    </div>
+    <label>Тип маршрута:</label>
+    <select name="route_type">
+      <option value="host" {% if route_type=="host" %}selected{% endif %}>Host (узел)</option>
+      <option value="network" {% if route_type=="network" %}selected{% endif %}>Network (сеть)</option>
+      <option value="default" {% if route_type=="default" %}selected{% endif %}>Default (по умолчанию)</option>
+    </select>
 
     <div class="row">
-      <div class="form-group">
-        <label for="gateway">Шлюз (gateway):</label>
+      <div>
+        <label>Шлюз (gateway):</label>
         <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
       </div>
-      <div class="form-group">
-        <label for="mask">Маска сети (авто / по умолчанию):</label>
+      <div>
+        <label>Маска сети (авто / по умолчанию):</label>
         <input type="text" name="mask" id="mask" value="{{ mask }}">
       </div>
     </div>
 
     <div class="checkbox-row">
-      <label for="ipv6">Включить IPv6</label>
-      <input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}>
+      <label><input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}> Включить IPv6</label>
     </div>
 
     <div class="buttons">
