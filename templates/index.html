@@ -5,6 +5,12 @@
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
@@ -54,13 +60,13 @@
 
   {% if result_v4 %}
   <h3>IPv4 маршруты:</h3>
-  <pre id="result_v4">{{ result_v4|safe }}</pre>
+  <pre><code id="result_v4" class="code-block bat">{{ result_v4|safe }}</code></pre>
   <button class="copy-btn" onclick="copyToClipboard('result_v4')">Скопировать IPv4</button>
   {% endif %}
 
   {% if result_v6 %}
   <h3>IPv6 маршруты:</h3>
-  <pre id="result_v6">{{ result_v6|safe }}</pre>
+  <pre><code id="result_v6" class="code-block bat">{{ result_v6|safe }}</code></pre>
   <button class="copy-btn" onclick="copyToClipboard('result_v6')">Скопировать IPv6</button>
   {% endif %}
 </div>
