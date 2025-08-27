@@ -1,0 +1,46 @@
+body {
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f3f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+.container {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  width: 720px;
+  max-width: 95%;
+  transition: all 0.3s ease;
+}
+.container:hover {
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+}
+textarea, input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+textarea { resize: none; height: 120px; }
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  margin-top: 8px;
+}
+button:hover { background: #0056b3; }
+.copy-btn { background: #28a745; }
+.copy-btn:hover { background: #1e7e34; }
+.checkbox-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.ip4 { color: #007bff; }
+.ip6 { color: #28a745; }
+.row { display: flex; gap: 20px; }
+.row div { flex: 1; }
