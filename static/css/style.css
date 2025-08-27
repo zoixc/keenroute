@@ -1,85 +1,115 @@
 body {
   font-family: 'Roboto', sans-serif;
-  background: #f9fafc;
-  color: #333;
+  background: #f4f7fb;
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
 .container {
-  max-width: 700px;
-  margin: auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
 h2 {
   text-align: center;
+  color: #2a4d9b;
   margin-bottom: 20px;
-  color: #0066cc;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
+label {
+  display: block;
+  font-weight: 500;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  color: #333;
 }
 
-textarea, input, select {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+textarea, select, input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
   font-size: 14px;
+  transition: border 0.2s;
+}
+
+textarea {
+  height: 100px;
+  resize: vertical;
+  max-height: 200px;
+}
+
+textarea:focus, input:focus, select:focus {
+  border-color: #2a4d9b;
+  outline: none;
 }
 
 .row {
   display: flex;
-  gap: 20px;
+  gap: 15px;
 }
 
-.row .form-group {
+.row div {
   flex: 1;
 }
 
 .checkbox-row {
+  margin-top: 15px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 15px 0;
+}
+
+.checkbox-row label {
+  font-weight: 400;
+  cursor: pointer;
 }
 
 .buttons {
-  display: flex;
-  gap: 15px;
   margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
 button {
-  flex: 1;
-  padding: 10px;
-  background: #0066cc;
-  color: white;
+  padding: 10px 20px;
   border: none;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
   transition: background 0.2s;
+  font-weight: 500;
 }
 
-button:hover {
-  background: #004999;
+button[type="submit"] {
+  background: #2a4d9b;
+  color: white;
 }
 
-pre {
-  background: #f4f4f4;
-  padding: 10px;
-  border-radius: 8px;
-  overflow-x: auto;
+button[type="submit"]:hover {
+  background: #1d3670;
 }
 
 .copy-btn {
   margin-top: 10px;
-  background: #28a745;
+  background: #4CAF50;
+  color: white;
+}
+
+.copy-btn:hover {
+  background: #3a8f41;
+}
+
+pre {
+  background: #f1f3f6;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.4;
 }
