@@ -1,10 +1,12 @@
 <!doctype html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keenroute</title>
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
@@ -19,29 +21,30 @@
 <div class="container">
   <h2>Keenroute</h2>
   <form method="post" onsubmit="saveForm()">
-    <label>Домены (по одному в строке):</label>
+    <label for="domains">Домены (по одному в строке):</label>
     <textarea name="domains" id="domains">{{ domains }}</textarea>
 
-    <label>Тип маршрута:</label>
-    <select name="route_type">
+    <label for="route_type">Тип маршрута:</label>
+    <select name="route_type" id="route_type">
       <option value="host" {% if route_type=="host" %}selected{% endif %}>Host (узел)</option>
       <option value="network" {% if route_type=="network" %}selected{% endif %}>Network (сеть)</option>
       <option value="default" {% if route_type=="default" %}selected{% endif %}>Default (по умолчанию)</option>
     </select>
 
     <div class="row">
-      <div>
-        <label>Шлюз (gateway):</label>
+      <div class="field-group">
+        <label for="gateway">Шлюз (gateway):</label>
         <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
       </div>
-      <div>
-        <label>Маска сети (авто / по умолчанию):</label>
+      <div class="field-group">
+        <label for="mask">Маска сети (авто / по умолчанию):</label>
         <input type="text" name="mask" id="mask" value="{{ mask }}">
       </div>
     </div>
 
     <div class="checkbox-row">
-      <label>Включить IPv6 <input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}></label>
+      <label for="ipv6">Включить IPv6</label>
+      <input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}>
     </div>
 
     <div class="buttons">
@@ -70,18 +73,20 @@ function copyToClipboard(id) {
   const text = document.getElementById(id).innerText.trim();
   navigator.clipboard.writeText(text).then(() => alert("Скопировано!"));
 }
+
 function saveForm() {
   localStorage.setItem("domains", document.getElementById("domains").value);
   localStorage.setItem("gateway", document.getElementById("gateway").value);
   localStorage.setItem("mask", document.getElementById("mask").value);
-  localStorage.setItem("ipv6", document.querySelector("input[name='ipv6']").checked);
-  localStorage.setItem("route_type", document.querySelector("select[name='route_type']").value);
+  localStorage.setItem("ipv6", document.getElementById("ipv6").checked);
+  localStorage.setItem("route_type", document.getElementById("route_type").value);
 }
+
 window.onload = function() {
   if (localStorage.getItem("domains")) document.getElementById("domains").value = localStorage.getItem("domains");
   if (localStorage.getItem("gateway")) document.getElementById("gateway").value = localStorage.getItem("gateway");
   if (localStorage.getItem("mask")) document.getElementById("mask").value = localStorage.getItem("mask");
-  if (localStorage.getItem("ipv6") === "true") document.querySelector("input[name='ipv6']").checked = true;
+  if (localStorage.getItem("ipv6") === "true") document.getElementById("ipv6").checked = true;
 };
 </script>
 </body>
