@@ -1,94 +1,84 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <title>Keenroute</title>
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- highlight.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
-
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('{{ url_for('static', filename='service-worker.js') }}')
-            .then(reg => console.log('Service Worker registered', reg))
-            .catch(err => console.log('Service Worker failed', err));
-        });
-      }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keenroute</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <link rel="icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
 </head>
 <body>
-<div class="container">
-  <h2>Keenroute</h2>
-  <form method="post" onsubmit="saveForm()">
-    <label>Домены (по одному в строке):</label>
-    <textarea name="domains" id="domains">{{ domains }}</textarea>
+  <div class="theme-toggle">
+    <button type="button" onclick="toggleTheme()">🌙 / 🌞</button>
+  </div>
 
-    <label>Тип маршрута:</label>
-    <select name="route_type">
-      <option value="host" {% if route_type=="host" %}selected{% endif %}>Host (узел)</option>
-      <option value="network" {% if route_type=="network" %}selected{% endif %}>Network (сеть)</option>
-      <option value="default" {% if route_type=="default" %}selected{% endif %}>Default (по умолчанию)</option>
-    </select>
+  <div class="container">
+    <h2>Keenroute</h2>
 
-    <div class="row">
-      <div>
-        <label>Шлюз (gateway):</label>
-        <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
+    <form method="POST">
+      <label for="route_type">Тип маршрута:</label>
+      <select id="route_type" name="route_type" required>
+        <option value="host">Маршрут до узла</option>
+        <option value="network">Маршрут до сети</option>
+        <option value="default">Маршрут по умолчанию</option>
+      </select>
+
+      <label for="sites">Сайты (через запятую):</label>
+      <textarea id="sites" name="sites" required></textarea>
+
+      <div class="row">
+        <div>
+          <label for="gateway">Шлюз:</label>
+          <input type="text" id="gateway" name="gateway" placeholder="192.168.1.1">
+        </div>
+        <div>
+          <label for="netmask">Маска сети:</label>
+          <input type="text" id="netmask" name="netmask" placeholder="255.255.255.0">
+        </div>
       </div>
-      <div>
-        <label>Маска сети (авто / по умолчанию):</label>
-        <input type="text" name="mask" id="mask" value="{{ mask }}">
+
+      <div class="checkbox-row">
+        <label>
+          <input type="checkbox" name="ipv6"> Включить IPv6
+        </label>
       </div>
-    </div>
 
-    <div class="checkbox-row">
-      <label><input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}> Включить IPv6</label>
-    </div>
+      <div class="buttons">
+        <button type="submit">Сгенерировать</button>
+      </div>
+    </form>
 
-    <div class="buttons">
-      <button type="submit" name="action" value="generate">Сгенерировать</button>
-      {% if result_v4 or result_v6 %}
-      <button type="submit" name="action" value="download">Скачать .bat</button>
-      {% endif %}
-    </div>
-  </form>
+    {% if cfg_output %}
+      <h3>CFG Конфигурация:</h3>
+      <pre><code id="cfg">{{ cfg_output }}</code></pre>
+      <button class="copy-btn" onclick="copyText('cfg')">📋 Скопировать</button>
+    {% endif %}
 
-  {% if result_v4 %}
-  <h3>IPv4 маршруты:</h3>
-  <pre><code id="result_v4" class="code-block bat">{{ result_v4|safe }}</code></pre>
-  <button class="copy-btn" onclick="copyToClipboard('result_v4')">Скопировать IPv4</button>
-  {% endif %}
+    {% if json_output %}
+      <h3>JSON Конфигурация:</h3>
+      <pre><code id="json">{{ json_output }}</code></pre>
+      <button class="copy-btn" onclick="copyText('json')">📋 Скопировать</button>
+    {% endif %}
+  </div>
 
-  {% if result_v6 %}
-  <h3>IPv6 маршруты:</h3>
-  <pre><code id="result_v6" class="code-block bat">{{ result_v6|safe }}</code></pre>
-  <button class="copy-btn" onclick="copyToClipboard('result_v6')">Скопировать IPv6</button>
-  {% endif %}
-</div>
+  <script>
+    function copyText(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text);
+      alert("Скопировано в буфер обмена!");
+    }
 
-<script>
-function copyToClipboard(id) {
-  const text = document.getElementById(id).innerText.trim();
-  navigator.clipboard.writeText(text).then(() => alert("Скопировано!"));
-}
-function saveForm() {
-  localStorage.setItem("domains", document.getElementById("domains").value);
-  localStorage.setItem("gateway", document.getElementById("gateway").value);
-  localStorage.setItem("mask", document.getElementById("mask").value);
-  localStorage.setItem("ipv6", document.querySelector("input[name='ipv6']").checked);
-  localStorage.setItem("route_type", document.querySelector("select[name='route_type']").value);
-}
-window.onload = function() {
-  if (localStorage.getItem("domains")) document.getElementById("domains").value = localStorage.getItem("domains");
-  if (localStorage.getItem("gateway")) document.getElementById("gateway").value = localStorage.getItem("gateway");
-  if (localStorage.getItem("mask")) document.getElementById("mask").value = localStorage.getItem("mask");
-  if (localStorage.getItem("ipv6") === "true") document.querySelector("input[name='ipv6']").checked = true;
-};
-</script>
+    // Темная/светлая тема
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+    }
+    window.onload = function() {
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
+      }
+    }
+  </script>
 </body>
 </html>
