@@ -35,6 +35,7 @@ body, input, textarea, select, button, label {
   --primary-color: #309DD8;
   --accent-color: #93DEFF;
   --text-color: #000000;
+  --text-color-light: #1a1a1a
 }
 
 /* База */
@@ -62,7 +63,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 26px;
+  margin-bottom: 36px;
 }
 
 h2 {
@@ -73,7 +74,7 @@ h2 {
 }
 
 h2 .keen { color: var(--primary-color); }
-h2 .route { color: var(--text-color); }
+h2 .route { color: var(--text-color-light); }
 
 .logo { width: 36px; height: 36px; }
 
@@ -82,14 +83,14 @@ label {
   display: block;
   margin-top: 14px;
   font-weight: 600;
-  color: #374151;
+  color: #2b2e33;
 }
 
 textarea, input[type="text"], select {
   width: 100%;
   margin-top: 6px;
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #1a1a1a;
   border-radius: 8px;
   font-size: 14px;
   box-sizing: border-box;
