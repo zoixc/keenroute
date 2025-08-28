@@ -217,6 +217,7 @@ pre {
 code {
   font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 /*  font-size: 14px; */
+  line-height: 1.2; 
   display: block;
   white-space: pre; 
 }
