@@ -143,11 +143,9 @@ textarea:focus, input:focus, select:focus {
 .checkbox-row {
   display: flex;
   flex-direction: column; /* чекбоксы в столбик */
-  gap: 6px;               /* расстояние между чекбоксами */
+  gap: 6px;
   margin-top: 6px;
-  box-sizing: border-box;
-  min-height: 72px;       /* зарезервированное место под хинт (подбирается по высоте) */
-  position: relative;
+  position: relative; /* для возможного позиционирования хинта */
 }
 
 /* Чекбоксы с текстом */
@@ -167,16 +165,18 @@ textarea:focus, input:focus, select:focus {
   accent-color: var(--primary-color);
 }
 
-/* Ошибка */
+/* Ошибка — рамка отключена, чтобы ничего не съезжало */
 .checkbox-row.error {
-  /* border: 1px dashed #ef4444; */
-  border-radius: 8px;
+  /* border: 1px dashed #ef4444; */ /* отключено */
+  border-radius: 8px; /* оставляем для красоты, можно уменьшить */
   padding: 8px;
   flex-direction: column; 
 }
 
-/* Хинт (сообщение об ошибке) */
+/* Хинт (сообщение об ошибке) — отключен, можно оставить скрытым */
 .checkbox-row .hint {
+  display: none; /* полностью скрываем */
+  /* Если нужно оставить, тогда можно использовать visibility: hidden; */
   position: absolute;
   bottom: 0;
   left: 0;
@@ -190,13 +190,14 @@ textarea:focus, input:focus, select:focus {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  visibility: hidden;
 }
 
-/* Показываем хинт */
+/* Показывать хинт при ошибке — закомментировано, так как используем только toast */
+/*
 .checkbox-row.error .hint {
   visibility: visible;
 }
+*/
 
 /* Кнопки */
 .buttons {
