@@ -165,7 +165,7 @@ textarea:focus, input:focus, select:focus {
 
 /* Ошибка */
 .checkbox-row.error {
-  border: 1px dashed #ef4444;
+  /* border: 1px dashed #ef4444; */
   border-radius: 8px;
   padding: 8px;
   flex-direction: column; 
