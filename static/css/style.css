@@ -217,7 +217,7 @@ pre {
 code {
   font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 /*  font-size: 14px; */
-  line-height: 1.2; 
+  line-height: 1.4; 
   display: block;
   white-space: pre; 
 }
@@ -248,6 +248,7 @@ code {
 
 h3 {
   font-size: 14px;
+  font-weight: 600; 
 }
 
 /* Адаптив под мобильные */
