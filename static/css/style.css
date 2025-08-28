@@ -123,8 +123,6 @@ textarea:focus, input:focus, select:focus {
 .row {
   display: flex;
   flex-direction: column;
-/*  gap: 12px; */
-  margin-top: 10px;
 }
 
 .field-group {
