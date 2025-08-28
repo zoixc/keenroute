@@ -27,6 +27,7 @@
 
 body, input, textarea, select, button, label {
   font-family: 'Heebo', system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: 10px;
 }
 
 /* Цвета приложения */
