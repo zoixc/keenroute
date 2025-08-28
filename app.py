@@ -14,7 +14,7 @@ def resolve_domain(domain, ipv6=False):
 
 def generate_routes(domains, gateway, mask, ipv6=False, route_type="host"):
     """
-    Возвращает плоский текст маршрутов и флаг некорректной маски.
+    Возвращает плоский текст маршрутов, набор IP и флаг некорректной маски.
     """
     lines = []
     ips_collected = set()
