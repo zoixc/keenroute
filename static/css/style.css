@@ -44,7 +44,6 @@ body {
   color: #111827;
   margin: 0;
   overflow-x: hidden;
-  line-height: 0.8; /* общий контроль межстрочного расстояния */
 }
 
 .container {
@@ -65,7 +64,6 @@ body {
   justify-content: center;
   gap: 10px;
   margin-bottom: 18px;
-  line-height: 0.8;
 }
 
 h2 {
@@ -73,7 +71,6 @@ h2 {
   font-weight: 700;
   font-size: 1.8rem;
   margin: 0;
-  line-height: 0.8;
 }
 
 h2 .keen { color: var(--primary-color); }
@@ -97,7 +94,6 @@ textarea, input[type="text"], select {
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
-  line-height: 0.8;
   box-sizing: border-box;
   background: #fff;
   transition: border-color .15s, box-shadow .15s;
@@ -107,14 +103,12 @@ textarea {
   min-height: 100px;
   resize: vertical;          
   overflow-y: auto;
-  line-height: 0.8;
 }
 
 textarea:focus, input:focus, select:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(48, 157, 216, .15);
-  line-height: 0.8;
 }
 
 /* Gateway и Mask */
@@ -138,7 +132,6 @@ textarea:focus, input:focus, select:focus {
   margin-top: 4px;
   color: #374151;
   font-size: 13px;
-  line-height: 0.8;
 }
 
 /* Чекбоксы IPv4/IPv6 */
@@ -229,13 +222,11 @@ pre {
   padding: 14px;
   overflow: auto;
   border: 1px solid #e5e7eb;
-  line-height: 0.8;
 }
 
 code {
   font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 14px;
-  line-height: 0.8;
   display: block;
   white-space: pre; 
 }
