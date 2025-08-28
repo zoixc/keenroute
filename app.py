@@ -1,9 +1,15 @@
-from flask import Flask, request, render_template, Response, flash
+from flask import Flask, request, render_template, Response, flash, send_from_directory
 import socket
 import ipaddress
 
 app = Flask(__name__)
 app.secret_key = "keenroute-secret"
+
+@app.route('/static/fonts/<path:filename>')
+def fonts(filename):
+    response = send_from_directory('static/fonts', filename)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 def resolve_domain(domain, ipv6=False):
     try:
@@ -11,12 +17,6 @@ def resolve_domain(domain, ipv6=False):
         return list({res[4][0] for res in socket.getaddrinfo(domain, None, family)})
     except socket.gaierror:
         return []
-
-@app.route('/static/fonts/<path:filename>')
-def fonts(filename):
-    response = send_from_directory('static/fonts', filename)
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    return response
 
 def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, route_type="host"):
     """
