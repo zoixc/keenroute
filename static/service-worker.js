@@ -14,7 +14,7 @@ const STATIC_PATHS = [
 // Установка и кэширование ресурсов
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_PATHS))
   );
 });
 
@@ -24,9 +24,7 @@ self.addEventListener("activate", (event) => {
     caches.keys().then(keys =>
       Promise.all(
         keys.map(key => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
+          if (key !== CACHE_NAME) return caches.delete(key);
         })
       )
     )
