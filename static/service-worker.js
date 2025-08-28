@@ -1,4 +1,4 @@
-const CACHE_NAME = "keenroute-cache-v2"; // меняем версию, чтобы сбросить старый кеш
+const CACHE_NAME = "keenroute-cache-v3"; // меняем версию, чтобы сбросить старый кеш
 const urlsToCache = [
   "/", 
   "/static/manifest.json",
