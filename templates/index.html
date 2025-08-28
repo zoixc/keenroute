@@ -56,11 +56,11 @@
     <div class="checkbox-row" id="ipChecks">
       <label class="check">
         <input type="checkbox" id="ipv4" name="ipv4" {% if ipv4 is not defined %}checked{% elif ipv4 %}checked{% endif %}>
-        <span>Включить IPv4</span>
+        <span>IPv4-маршруты</span>
       </label>
       <label class="check">
         <input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}>
-        <span>Включить IPv6</span>
+        <span>IPv6-маршруты</span>
       </label>
       <div id="hint" class="hint" role="alert" aria-live="polite">
         Выберите хотя бы один стек (IPv4 или IPv6), иначе маршруты не сгенерируются.
