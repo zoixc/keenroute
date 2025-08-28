@@ -143,10 +143,11 @@ textarea:focus, input:focus, select:focus {
 .checkbox-row {
   display: flex;
   flex-direction: column; /* чекбоксы в столбик */
-  gap: 6px;
+  gap: 6px;               /* расстояние между чекбоксами */
   margin-top: 6px;
-  min-height: 48px; /* зарезервированное место под хинт */
   box-sizing: border-box;
+  min-height: 72px;       /* зарезервированное место под хинт (подбирается по высоте) */
+  position: relative;
 }
 
 /* Чекбоксы с текстом */
@@ -176,15 +177,20 @@ textarea:focus, input:focus, select:focus {
 
 /* Хинт (сообщение об ошибке) */
 .checkbox-row .hint {
-  display: block;          /* всегда блок */
-  visibility: hidden;      /* скрыт по умолчанию */
-  margin-top: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 13px;
   color: #b91c1c;
   background: #fee2e2;
   border: 1px solid #fecaca;
-  padding: 4px 6px;
   border-radius: 6px;
-  font-size: 13px;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  visibility: hidden;
 }
 
 /* Показываем хинт */
