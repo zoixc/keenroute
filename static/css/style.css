@@ -281,13 +281,6 @@ h3 {
   font-weight: 600; 
 }
 
-.flash-messages {
-  min-height: 2rem; /* место под сообщение */
-}
-.flash-messages:empty {
-  min-height: 0; /* если пусто — ничего не занимает */
-}
-
 /* Адаптив под мобильные */
 @media (max-width: 820px) {
   .row { flex-direction: column; }
