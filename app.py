@@ -3,7 +3,7 @@ import socket
 import ipaddress
 
 app = Flask(__name__)
-app.secret_key = "keenroute-secret"  # нужно для flash-сообщений
+app.secret_key = "keenroute-secret"
 
 def resolve_domain(domain, ipv6=False):
     try:
@@ -12,15 +12,14 @@ def resolve_domain(domain, ipv6=False):
     except socket.gaierror:
         return []
 
-def generate_routes(domains, gateway, mask, ipv6=False, route_type="host"):
+def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, route_type="host"):
     """
-    Возвращает плоский текст маршрутов, набор IP и флаг некорректной маски.
-    Для режима network исключает повторяющиеся сети.
+    Возвращает строки маршрутов и набор IP/сетей.
+    Для IPv4 используется mask_ipv4, для IPv6 — prefix_ipv6.
     """
     lines = []
     ips_collected = set()
     invalid_mask = False
-    networks_seen = set()  # Для режима network
 
     for domain in domains.splitlines():
         domain = domain.strip()
@@ -37,45 +36,41 @@ def generate_routes(domains, gateway, mask, ipv6=False, route_type="host"):
             continue
 
         ips = resolve_domain(domain, ipv6=ipv6)
+        networks = set()
+
         for ip in ips:
             try:
-                if route_type == "host":
-                    line_mask = "255.255.255.255"
-                    route_ip = ip
-                elif route_type == "network":
-                    # Для IPv6 просто используем /64 по умолчанию
-                    if ipv6:
+                if not ipv6:
+                    # IPv4
+                    if route_type == "host":
+                        networks.add((ip, "255.255.255.255"))
+                    elif route_type == "network":
+                        m = mask_ipv4 if mask_ipv4 else "255.255.255.0"
                         try:
-                            net = ipaddress.IPv6Network(f"{ip}/64", strict=False)
-                            route_ip = str(net.network_address)
-                            line_mask = str(net.netmask)  # Windows-style для IPv6 не важна
+                            net = ipaddress.ip_network(f"{ip}/{m}", strict=False)
+                            networks.add((str(net.network_address), str(net.netmask)))
                         except ValueError:
                             invalid_mask = True
-                            net = ipaddress.IPv6Network(f"{ip}/64", strict=False)
-                            route_ip = str(net.network_address)
-                            line_mask = str(net.netmask)
-                    else:
-                        line_mask = mask if mask else "255.255.255.0"
+                            net = ipaddress.ip_network(f"{ip}/24", strict=False)
+                            networks.add((str(net.network_address), str(net.netmask)))
+                else:
+                    # IPv6
+                    if route_type == "host":
+                        networks.add((ip, "128"))
+                    elif route_type == "network":
                         try:
-                            net = ipaddress.IPv4Network(f"{ip}/{line_mask}", strict=False)
-                            route_ip = str(net.network_address)
-                            line_mask = str(net.netmask)
+                            net = ipaddress.ip_network(f"{ip}/{prefix_ipv6}", strict=False)
+                            networks.add((str(net.network_address), str(net.prefixlen)))
                         except ValueError:
                             invalid_mask = True
-                            net = ipaddress.IPv4Network(f"{ip}/24", strict=False)
-                            route_ip = str(net.network_address)
-                            line_mask = str(net.netmask)
-
-                    # Пропускаем уже добавленные сети
-                    if route_ip in networks_seen:
-                        continue
-                    networks_seen.add(route_ip)
-
-                lines.append(f"route add {route_ip} mask {line_mask} {gateway} :: rem {domain}")
-                ips_collected.add(route_ip)
-
+                            net = ipaddress.ip_network(f"{ip}/64", strict=False)
+                            networks.add((str(net.network_address), str(net.prefixlen)))
             except Exception as e:
                 print(f"Ошибка при обработке {domain}: {e}")
+
+        for net_ip, net_mask in networks:
+            lines.append(f"route add {net_ip} mask {net_mask} {gateway} :: rem {domain}")
+            ips_collected.add(net_ip)
 
     return "\n".join(lines), ips_collected, invalid_mask
 
@@ -85,7 +80,8 @@ def index():
     ips_v4, ips_v6 = set(), set()
     domains = ""
     gateway = "0.0.0.0"
-    mask = ""
+    mask_ipv4 = ""
+    prefix_ipv6 = 64
     ipv4 = True
     ipv6 = False
     route_type = "host"
@@ -94,23 +90,33 @@ def index():
     if request.method == "POST":
         domains = request.form.get("domains", "")
         gateway = request.form.get("gateway", "0.0.0.0")
-        mask = request.form.get("mask", "")
+        mask_ipv4 = request.form.get("mask_ipv4", "")
+        prefix_ipv6_str = request.form.get("prefix_ipv6", "64")
+        try:
+            prefix_ipv6 = int(prefix_ipv6_str)
+            if not (0 <= prefix_ipv6 <= 128):
+                prefix_ipv6 = 64
+                mask_warning = True
+        except ValueError:
+            prefix_ipv6 = 64
+            mask_warning = True
+
         ipv4 = "ipv4" in request.form
         ipv6 = "ipv6" in request.form
         route_type = request.form.get("route_type", "host")
         action = request.form.get("action")
 
         if ipv4:
-            result_v4, ips_v4, invalid_v4 = generate_routes(domains, gateway, mask, ipv6=False, route_type=route_type)
+            result_v4, ips_v4, invalid_v4 = generate_routes(domains, gateway, mask_ipv4, prefix_ipv6, ipv6=False, route_type=route_type)
             if invalid_v4:
                 mask_warning = True
         if ipv6:
-            result_v6, ips_v6, invalid_v6 = generate_routes(domains, gateway, mask, ipv6=True, route_type=route_type)
+            result_v6, ips_v6, invalid_v6 = generate_routes(domains, gateway, mask_ipv4, prefix_ipv6, ipv6=True, route_type=route_type)
             if invalid_v6:
                 mask_warning = True
 
         if mask_warning:
-            flash("Введена некорректная маска сети. Используется /24 для IPv4 и /64 для IPv6 по умолчанию.", "warning")
+            flash("Некорректная маска/префикс. Используются значения по умолчанию: IPv4 /24, IPv6 /64.", "warning")
 
         if action == "download" and (result_v4 or result_v6):
             all_routes = (result_v4 + ("\n" if result_v4 and result_v6 else "") + result_v6).strip()
@@ -132,7 +138,8 @@ def index():
         domains_count=domains_count,
         domains=domains,
         gateway=gateway,
-        mask=mask,
+        mask_ipv4=mask_ipv4,
+        prefix_ipv6=prefix_ipv6,
         ipv4=ipv4,
         ipv6=ipv6,
         route_type=route_type
