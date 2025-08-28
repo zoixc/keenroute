@@ -246,7 +246,7 @@ code {
 }
 
 #result_v4, #result_v6 {
-  font-size: 14px;
+  font-size: 14px !important;
 }
 
 /* Адаптив под мобильные */
