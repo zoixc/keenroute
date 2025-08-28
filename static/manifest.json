@@ -1,6 +1,7 @@
 {
   "name": "Keenroute",
   "short_name": "Keenroute",
+  "description": "Генератор маршрутов IPv4 и IPv6 для Windows. Скачивайте .bat файлы для автоматической настройки маршрутов.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
