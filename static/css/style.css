@@ -191,7 +191,7 @@ code {
   border-radius: 6px;
   padding: 12px;
   position: fixed;
-  z-index: 1000;
+  z-index: 950;
   left: 50%;
   bottom: 30px;
   transform: translateX(-50%);
