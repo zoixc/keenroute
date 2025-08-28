@@ -11,32 +11,37 @@ def resolve_domain(domain, ipv6=False):
         return []
 
 def generate_routes(domains, gateway, mask, ipv6=False, route_type="host"):
+    """
+    Возвращает ПЛОСКИЙ текст (без HTML), построчно.
+    """
     lines = []
     ips_collected = set()
     for domain in domains.splitlines():
         domain = domain.strip()
         if not domain:
             continue
+
         if route_type == "default":
-            ip4 = "0.0.0.0"
-            ip6 = "::/0"
             if not ipv6:
-                lines.append(f"<span class='ip4'>route add {ip4}</span> mask 0.0.0.0 {gateway} :: rem default")
-                ips_collected.add(ip4)
+                # Стандартный дефолтный маршрут для IPv4
+                lines.append(f"route add 0.0.0.0 mask 0.0.0.0 {gateway} :: rem default")
+                ips_collected.add("0.0.0.0")
             else:
-                lines.append(f"<span class='ip6'>route add {ip6}</span> mask 0.0.0.0 {gateway} :: rem default IPv6")
-                ips_collected.add(ip6)
+                # Условный вариант для IPv6 (синтаксис Windows для IPv6 иной, но оставим как было ранее)
+                lines.append(f"route add ::/0 mask 0.0.0.0 {gateway} :: rem default IPv6")
+                ips_collected.add("::/0")
             continue
+
         ips = resolve_domain(domain, ipv6=ipv6)
         for ip in ips:
-            cls = "ip6" if ipv6 else "ip4"
             line_mask = mask
             if route_type == "host":
                 line_mask = "255.255.255.255"
             elif route_type == "network" and not mask:
                 line_mask = "255.255.255.0"
-            lines.append(f"<span class='{cls}'>route add {ip}</span> mask {line_mask} {gateway} :: rem {domain}")
+            lines.append(f"route add {ip} mask {line_mask} {gateway} :: rem {domain}")
             ips_collected.add(ip)
+
     return "\n".join(lines), ips_collected
 
 @app.route("/", methods=["GET", "POST"])
@@ -46,6 +51,8 @@ def index():
     domains = ""
     gateway = "0.0.0.0"
     mask = ""
+    # По умолчанию IPv4 включён
+    ipv4 = True
     ipv6 = False
     route_type = "host"
 
@@ -53,18 +60,18 @@ def index():
         domains = request.form.get("domains", "")
         gateway = request.form.get("gateway", "0.0.0.0")
         mask = request.form.get("mask", "")
+        ipv4 = "ipv4" in request.form  # два чекбокса
         ipv6 = "ipv6" in request.form
         route_type = request.form.get("route_type", "host")
         action = request.form.get("action")
 
-        result_v4, ips_v4 = generate_routes(domains, gateway, mask, ipv6=False, route_type=route_type)
+        if ipv4:
+            result_v4, ips_v4 = generate_routes(domains, gateway, mask, ipv6=False, route_type=route_type)
         if ipv6:
             result_v6, ips_v6 = generate_routes(domains, gateway, mask, ipv6=True, route_type=route_type)
 
         if action == "download" and (result_v4 or result_v6):
-            plain_v4 = result_v4.replace("<span class='ip4'>","").replace("</span>","")
-            plain_v6 = result_v6.replace("<span class='ip6'>","").replace("</span>","")
-            all_routes = (plain_v4 + "\n" + plain_v6).strip()
+            all_routes = (result_v4 + ("\n" if result_v4 and result_v6 else "") + result_v6).strip()
             return Response(
                 all_routes,
                 mimetype="text/plain",
@@ -84,6 +91,7 @@ def index():
         domains=domains,
         gateway=gateway,
         mask=mask,
+        ipv4=ipv4,
         ipv6=ipv6,
         route_type=route_type
     )
