@@ -5,6 +5,10 @@ import ipaddress
 app = Flask(__name__)
 app.secret_key = "keenroute-secret"
 
+@app.route('/service-worker.js')
+def service_worker():
+    return send_from_directory('.', 'service-worker.js')
+
 @app.route('/static/fonts/<path:filename>')
 def fonts(filename):
     response = send_from_directory('static/fonts', filename)
