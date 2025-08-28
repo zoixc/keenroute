@@ -1,30 +1,15 @@
 <!doctype html>
 <html lang="ru">
 <head>
-    <link rel="icon" href="{{ url_for('static', filename='img/favicon-32.ico') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon-32.ico') }}" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keenroute</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Highlight.js для подсветки кода -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <script>window.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
-
-    <!-- Service Worker для PWA -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('{{ url_for('static', filename='service-worker.js') }}')
-            .then(reg => console.log('Service Worker registered', reg))
-            .catch(err => console.log('Service Worker failed', err));
-        });
-      }
-    </script>
 </head>
 <body>
 <div class="container">
@@ -61,17 +46,18 @@
         <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
       </div>
       <div class="field-group">
-        <label for="mask">Маска сети (авто / по умолчанию):</label>
-        <input type="text" name="mask" id="mask" value="{{ mask }}">
-        <div id="maskHint" class="hint-small" style="display:none;">
-          Для IPv6 маска игнорируется.
-        </div>
+        <label for="mask_ipv4">Маска сети IPv4 (авто / по умолчанию 255.255.255.0):</label>
+        <input type="text" name="mask_ipv4" id="mask_ipv4" value="{{ mask_ipv4 }}">
+      </div>
+      <div class="field-group">
+        <label for="prefix_ipv6">Префикс сети IPv6 (авто / по умолчанию /64):</label>
+        <input type="text" name="prefix_ipv6" id="prefix_ipv6" value="{{ prefix_ipv6 }}">
       </div>
     </div>
 
     <div class="checkbox-row" id="ipChecks">
       <label class="check">
-        <input type="checkbox" id="ipv4" name="ipv4" {% if ipv4 is not defined %}checked{% elif ipv4 %}checked{% endif %}>
+        <input type="checkbox" id="ipv4" name="ipv4" {% if ipv4 %}checked{% endif %}>
         <span>IPv4-маршруты</span>
       </label>
       <label class="check">
@@ -158,7 +144,8 @@ form.addEventListener('submit', function(e) {
 
   localStorage.setItem("domains", document.getElementById("domains").value);
   localStorage.setItem("gateway", document.getElementById("gateway").value);
-  localStorage.setItem("mask", document.getElementById("mask").value);
+  localStorage.setItem("mask_ipv4", document.getElementById("mask_ipv4").value);
+  localStorage.setItem("prefix_ipv6", document.getElementById("prefix_ipv6").value);
   localStorage.setItem("ipv4", v4);
   localStorage.setItem("ipv6", v6);
   localStorage.setItem("route_type", document.getElementById("route_type").value);
@@ -168,7 +155,8 @@ form.addEventListener('submit', function(e) {
 window.addEventListener('load', () => {
   if (localStorage.getItem("domains")) document.getElementById("domains").value = localStorage.getItem("domains");
   if (localStorage.getItem("gateway")) document.getElementById("gateway").value = localStorage.getItem("gateway");
-  if (localStorage.getItem("mask")) document.getElementById("mask").value = localStorage.getItem("mask");
+  if (localStorage.getItem("mask_ipv4")) document.getElementById("mask_ipv4").value = localStorage.getItem("mask_ipv4");
+  if (localStorage.getItem("prefix_ipv6")) document.getElementById("prefix_ipv6").value = localStorage.getItem("prefix_ipv6");
 
   const st4 = localStorage.getItem("ipv4");
   const st6 = localStorage.getItem("ipv6");
@@ -178,25 +166,13 @@ window.addEventListener('load', () => {
   const rt = localStorage.getItem("route_type");
   if (rt) document.getElementById("route_type").value = rt;
 
-  // убираем подсветку ошибки при изменении чекбоксов
   ['ipv4','ipv6'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => {
       document.getElementById('hint').classList.remove('show');
       document.getElementById('ipChecks').classList.remove('error');
-      updateMaskHint();
     });
   });
-
-  // Показываем/скрываем подсказку маски для IPv6 при загрузке
-  updateMaskHint();
 });
-
-// Подсказка для IPv6
-function updateMaskHint() {
-  const v6 = document.getElementById('ipv6').checked;
-  const hint = document.getElementById('maskHint');
-  hint.style.display = v6 ? 'block' : 'none';
-}
 </script>
 </body>
 </html>
