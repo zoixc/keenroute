@@ -26,6 +26,12 @@ body {
   margin-bottom: 18px;
 }
 
+h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700; /* жирный */
+  letter-spacing: 0.5px;
+}
+
 .logo { width: 36px; height: 36px; }
 h2 { margin: 0; color: #2563eb; font-size: 1.8rem; }
 
