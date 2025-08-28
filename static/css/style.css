@@ -1,15 +1,18 @@
+/* --- PWA fonts fix --- */
 @font-face {
   font-family: 'Conquera';
-  src: url('../fonts/conquera-bold.ttf') format('truetype');
+  src: url('/fonts/conquera-bold.ttf') format('truetype'); /* абсолютный путь */
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'IBM';
-  src: url('../fonts/IBMPlexSans-Regular.ttf') format('truetype');
+  src: url('/fonts/IBMPlexSans-Regular.ttf') format('truetype'); /* абсолютный путь */
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 body, input, textarea, select, button, label {
@@ -144,19 +147,21 @@ textarea:focus, input:focus, select:focus {
   border: 1px dashed #ef4444;
   border-radius: 8px;
   padding: 8px;
+  flex-direction: column; /* чтобы хинт был внутри рамки */
 }
 
 /* Хинт при ошибке */
 .hint {
   display: none;
-  width: 100%;
-  margin-top: 4px;
+  margin-top: 6px;
   color: #b91c1c;
   background: #fee2e2;
   border: 1px solid #fecaca;
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  width: 100%;
+  box-sizing: border-box;
 }
 .hint.show { display: block; }
 
