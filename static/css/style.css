@@ -245,8 +245,9 @@ code {
   opacity: 1;
 }
 
+pre + h3,
 #result_v4, #result_v6 {
-  font-size: 10px !important;
+  font-size: 14px;
 }
 
 /* Адаптив под мобильные */
