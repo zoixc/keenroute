@@ -139,3 +139,22 @@ code {
     gap: 12px;
   }
 }
+
+#copy-notification {
+  visibility: hidden;
+  min-width: 180px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 12px;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+#copy-notification.show { visibility: visible; opacity: 1; }
