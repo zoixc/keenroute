@@ -95,7 +95,7 @@ textarea, input[type="text"], select {
   font-size: 14px;
   box-sizing: border-box;
   background: #fff;
-  transition: border-color .15s, box-shadow .15s;
+  transition: border-color .15s; /* box-shadow .15s; */
 }
 
 textarea {
@@ -109,7 +109,7 @@ textarea {
 textarea:focus, input:focus, select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(48, 157, 216, .15);
+/*  box-shadow: 0 0 0 3px rgba(48, 157, 216, .15); */
   border-color: #309DD8;
 /*  box-shadow: 0 0 0 2px rgba(0,0,0,0.1); */
   border-radius: 4px;
