@@ -63,6 +63,9 @@
       <div class="field-group">
         <label for="mask">Маска сети (авто / по умолчанию):</label>
         <input type="text" name="mask" id="mask" value="{{ mask }}">
+        <div id="maskHint" class="hint-small" style="display:none;">
+          Для IPv6 маска игнорируется.
+        </div>
       </div>
     </div>
 
@@ -180,9 +183,20 @@ window.addEventListener('load', () => {
     document.getElementById(id).addEventListener('change', () => {
       document.getElementById('hint').classList.remove('show');
       document.getElementById('ipChecks').classList.remove('error');
+      updateMaskHint();
     });
   });
+
+  // Показываем/скрываем подсказку маски для IPv6 при загрузке
+  updateMaskHint();
 });
+
+// Подсказка для IPv6
+function updateMaskHint() {
+  const v6 = document.getElementById('ipv6').checked;
+  const hint = document.getElementById('maskHint');
+  hint.style.display = v6 ? 'block' : 'none';
+}
 </script>
 </body>
 </html>
