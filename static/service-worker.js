@@ -1,4 +1,4 @@
-const CACHE_NAME = "keenroute-cache-v9";
+const CACHE_NAME = "keenroute-cache-v10";
 const urlsToCache = [
   "/",
   "/static/manifest.json",
@@ -7,6 +7,7 @@ const urlsToCache = [
   "/static/fonts/conquera-bold.woff",
   "/static/fonts/IBMPlexSans-Regular.woff2",
   "/static/fonts/IBMPlexSans-Regular.woff",
+  "/static/fonts/heebocyrillic.woff2",
   "/static/img/icon-72.png",
   "/static/img/icon-192.png",
   "/static/img/icon-512.png",
