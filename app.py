@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template, Response
+from flask import Flask, request, render_template, Response, flash
 import socket
-import ipaddress  # <- добавлено
+import ipaddress
 
 app = Flask(__name__)
+app.secret_key = "keenroute-secret"  # нужно для flash-сообщений
 
 def resolve_domain(domain, ipv6=False):
     try:
@@ -13,10 +14,12 @@ def resolve_domain(domain, ipv6=False):
 
 def generate_routes(domains, gateway, mask, ipv6=False, route_type="host"):
     """
-    Возвращает ПЛОСКИЙ текст (без HTML), построчно.
+    Возвращает плоский текст маршрутов и флаг некорректной маски.
     """
     lines = []
     ips_collected = set()
+    invalid_mask = False
+
     for domain in domains.splitlines():
         domain = domain.strip()
         if not domain:
@@ -33,19 +36,30 @@ def generate_routes(domains, gateway, mask, ipv6=False, route_type="host"):
 
         ips = resolve_domain(domain, ipv6=ipv6)
         for ip in ips:
-            if route_type == "host":
-                line_mask = "255.255.255.255"
-                route_ip = ip
-            elif route_type == "network":
-                # Если маска не указана, ставим /24 по умолчанию
-                line_mask = mask if mask else "255.255.255.0"
-                net = ipaddress.ip_network(f"{ip}/{line_mask}", strict=False)
-                route_ip = str(net.network_address)
-                line_mask = str(net.netmask)
-            lines.append(f"route add {route_ip} mask {line_mask} {gateway} :: rem {domain}")
-            ips_collected.add(route_ip)
+            try:
+                if route_type == "host":
+                    line_mask = "255.255.255.255"
+                    route_ip = ip
+                elif route_type == "network":
+                    line_mask = mask if mask else "255.255.255.0"
+                    try:
+                        net = ipaddress.ip_network(f"{ip}/{line_mask}", strict=False)
+                        route_ip = str(net.network_address)
+                        line_mask = str(net.netmask)
+                    except ValueError:
+                        invalid_mask = True
+                        # fallback на /24
+                        net = ipaddress.ip_network(f"{ip}/24", strict=False)
+                        route_ip = str(net.network_address)
+                        line_mask = str(net.netmask)
 
-    return "\n".join(lines), ips_collected
+                lines.append(f"route add {route_ip} mask {line_mask} {gateway} :: rem {domain}")
+                ips_collected.add(route_ip)
+
+            except Exception as e:
+                print(f"Ошибка при обработке {domain}: {e}")
+
+    return "\n".join(lines), ips_collected, invalid_mask
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -57,6 +71,7 @@ def index():
     ipv4 = True
     ipv6 = False
     route_type = "host"
+    mask_warning = False
 
     if request.method == "POST":
         domains = request.form.get("domains", "")
@@ -68,9 +83,16 @@ def index():
         action = request.form.get("action")
 
         if ipv4:
-            result_v4, ips_v4 = generate_routes(domains, gateway, mask, ipv6=False, route_type=route_type)
+            result_v4, ips_v4, invalid_v4 = generate_routes(domains, gateway, mask, ipv6=False, route_type=route_type)
+            if invalid_v4:
+                mask_warning = True
         if ipv6:
-            result_v6, ips_v6 = generate_routes(domains, gateway, mask, ipv6=True, route_type=route_type)
+            result_v6, ips_v6, invalid_v6 = generate_routes(domains, gateway, mask, ipv6=True, route_type=route_type)
+            if invalid_v6:
+                mask_warning = True
+
+        if mask_warning:
+            flash("Введена некорректная маска сети. Используется /24 по умолчанию.", "warning")
 
         if action == "download" and (result_v4 or result_v6):
             all_routes = (result_v4 + ("\n" if result_v4 and result_v6 else "") + result_v6).strip()
