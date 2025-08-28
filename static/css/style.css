@@ -165,9 +165,9 @@ button:hover { background: #237cb5; }
 button:active { transform: translateY(1px); }
 
 button.copy {
-  background: #10b981;
+  background: var(--primary-color);
 }
-button.copy:hover { background: #059669; }
+button.copy:hover { background: #237cb5; }
 
 /* Блоки кода */
 pre {
