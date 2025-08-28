@@ -3,8 +3,8 @@ const urlsToCache = [
   "/", 
   "/static/manifest.json",
   "/static/css/style.css",
-  "/fonts/conquera-bold.ttf",
-  "/fonts/IBMPlexSans-Regular.ttf",
+  "/static/fonts/conquera-bold.ttf",
+  "/static/fonts/IBMPlexSans-Regular.ttf",
   "/static/img/icon-72.png",
   "/static/img/icon-192.png",
   "/static/img/icon-512.png"
