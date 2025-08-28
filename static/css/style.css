@@ -142,12 +142,14 @@ textarea:focus, input:focus, select:focus {
 /* Чекбоксы IPv4/IPv6 */
 .checkbox-row {
   display: flex;
-  flex-direction: column; /* чтобы чекбоксы были в столбик */
+  flex-direction: column; /* чекбоксы в столбик */
   gap: 6px;
   margin-top: 6px;
-  position: relative; /* для абсолютного позиционирования хинта */
+  min-height: 48px; /* зарезервированное место под хинт */
+  box-sizing: border-box;
 }
 
+/* Чекбоксы с текстом */
 .checkbox-row .check {
   display: flex;
   align-items: center;
@@ -174,30 +176,20 @@ textarea:focus, input:focus, select:focus {
 
 /* Хинт (сообщение об ошибке) */
 .checkbox-row .hint {
-  position: absolute; /* закрепляем поверх контейнера */
-  bottom: -20px;      /* отступ под чекбоксами, регулируй по размеру */
-  left: 0;
+  display: block;          /* всегда блок */
+  visibility: hidden;      /* скрыт по умолчанию */
+  margin-top: 4px;
   color: #b91c1c;
   background: #fee2e2;
   border: 1px solid #fecaca;
   padding: 4px 6px;
   border-radius: 6px;
   font-size: 13px;
-  width: 100%;
-  box-sizing: border-box;
-  display: none;      /* скрыто по умолчанию */
-  z-index: 10;
 }
 
 /* Показываем хинт */
 .checkbox-row.error .hint {
-  display: block;
-}
-
-/* Чекбоксы не съезжают при ошибке */
-.checkbox-row.error {
-  /* можно оставить border-radius, padding, но убрать динамическое изменение высоты */
-  padding-bottom: 24px; /* заранее зарезервированное место для хинта */
+  visibility: visible;
 }
 
 /* Кнопки */
