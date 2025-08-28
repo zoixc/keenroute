@@ -3,5 +3,8 @@ services:
     image: ptabi/keenroute:latest
     container_name: keenroute
     ports:
-      - "5000:5000"
+      - "5000:5000" 
     restart: unless-stopped
+    environment:
+      FLASK_ENV: production
+      WORKERS: "${WORKERS:-1}" 
