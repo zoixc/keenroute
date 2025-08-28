@@ -142,9 +142,10 @@ textarea:focus, input:focus, select:focus {
 /* Чекбоксы IPv4/IPv6 */
 .checkbox-row {
   display: flex;
-  flex-direction: column; /* ставим вертикально */
-  gap: 8px;               /* расстояние между чекбоксами */
+  flex-direction: column; /* чтобы чекбоксы были в столбик */
+  gap: 6px;
   margin-top: 6px;
+  position: relative; /* для абсолютного позиционирования хинта */
 }
 
 .checkbox-row .check {
