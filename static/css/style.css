@@ -197,9 +197,9 @@ code {
   border-radius: 6px;
   padding: 12px;
   position: fixed;
-  z-index: 950;
+  z-index: 1000;
   left: 50%;
-  bottom: 30px;
+  top: 200px;
   transform: translateX(-50%);
   font-size: 14px;
   opacity: 0;
