@@ -208,7 +208,7 @@ button:hover { background: #237cb5; }
 .buttons {
   display: flex;
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 14px;
   flex-wrap: wrap;
 }
 
