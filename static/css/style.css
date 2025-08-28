@@ -148,7 +148,7 @@ textarea:focus, input:focus, select:focus {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 6px;
 }
 
 .checkbox-row .check {
