@@ -1,21 +1,41 @@
 <!doctype html>
 <html lang="ru">
 <head>
-    <link rel="icon" type="image/x-icon" href="/static/img/favicon-32.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Генератор маршрутов IPv4 и IPv6 для Windows. Скачивайте .bat файлы для автоматической настройки маршрутов.">
     <title>Keenroute</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon-32.ico">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    <!-- Highlight.js для подсветки кода -->
+    <!-- Manifest -->
+    <link rel="manifest" href="/static/manifest.json">
+
+    <!-- Highlight.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script>window.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+    <script>
+      window.addEventListener('DOMContentLoaded', () => hljs.highlightAll());
+    </script>
+
+    <!-- Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('Service Worker registered', reg))
+            .catch(err => console.log('Service Worker failed', err));
+        });
+      }
+    </script>
 </head>
 <body>
 <div class="container">
 
-  <!-- Flash-сообщения -->
   {% with messages = get_flashed_messages(category_filter=["warning"]) %}
     {% if messages %}
       <div class="flash-messages">
@@ -47,11 +67,11 @@
         <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
       </div>
       <div class="field-group">
-        <label for="mask_ipv4">Маска сети IPv4 (авто / по умолчанию 255.255.255.0):</label>
+        <label for="mask_ipv4">Маска сети IPv4 (по умолчанию 255.255.255.0):</label>
         <input type="text" name="mask_ipv4" id="mask_ipv4" value="{{ mask_ipv4 }}">
       </div>
       <div class="field-group">
-        <label for="prefix_ipv6">Префикс сети IPv6 (авто / по умолчанию /64):</label>
+        <label for="prefix_ipv6">Префикс сети IPv6 (по умолчанию /64):</label>
         <input type="text" name="prefix_ipv6" id="prefix_ipv6" value="{{ prefix_ipv6 }}">
       </div>
     </div>
@@ -73,7 +93,7 @@
     <div class="buttons">
       <button type="submit" name="action" value="generate">Сгенерировать</button>
       {% if result_v4 or result_v6 %}
-      <button type="submit" name="action" value="download">Скачать .bat</button>
+        <button type="submit" name="action" value="download">Скачать .bat</button>
       {% endif %}
     </div>
   </form>
@@ -89,9 +109,9 @@
     <pre><code class="language-dos" id="result_v6">{{ result_v6 }}</code></pre>
     <button class="copy" onclick="copyToClipboard('result_v6')">Копировать IPv6</button>
   {% endif %}
+
 </div>
 
-<!-- Toast уведомление -->
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -129,7 +149,6 @@ function fallbackCopy(text) {
   document.body.removeChild(ta);
 }
 
-// Проверка, чтобы хотя бы один чекбокс был отмечен
 const form = document.getElementById('routeForm');
 form.addEventListener('submit', function(e) {
   const v4 = document.getElementById('ipv4').checked;
@@ -152,7 +171,6 @@ form.addEventListener('submit', function(e) {
   localStorage.setItem("route_type", document.getElementById("route_type").value);
 });
 
-// Восстановление состояния формы
 window.addEventListener('load', () => {
   if (localStorage.getItem("domains")) document.getElementById("domains").value = localStorage.getItem("domains");
   if (localStorage.getItem("gateway")) document.getElementById("gateway").value = localStorage.getItem("gateway");
