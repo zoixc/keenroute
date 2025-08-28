@@ -1,7 +1,7 @@
 /* --- PWA fonts fix --- */
 @font-face {
   font-family: 'Conquera';
-  src: url('/static/fonts/conquera-bold.woff') format('woff');
+  src: url('../fonts/conquera-bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'IBM';
-  src: url('/static/fonts/IBMPlexSans-Regular.woff') format('woff');
+  src: url('../fonts/IBMPlexSans-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
