@@ -6,14 +6,14 @@
 }
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto-Light.ttf') format('truetype');
+  font-family: 'Rubik';
+  src: url('../fonts/Rubik-Light.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 body, input, textarea, select, button, label {
-    font-family: 'Roboto', system-ui, -apple-system, Segoe UI, sans-serif;
+    font-family: 'Rubik', system-ui, -apple-system, Segoe UI, sans-serif;
 }
 
 /* Цвета приложения */
