@@ -216,7 +216,7 @@ pre {
 
 code {
   font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 14px;
+/*  font-size: 14px; */
   display: block;
   white-space: pre; 
 }
@@ -245,8 +245,7 @@ code {
   opacity: 1;
 }
 
-pre + h3,
-#result_v4, #result_v6 {
+h3 {
   font-size: 14px;
 }
 
