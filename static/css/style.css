@@ -171,20 +171,33 @@ textarea:focus, input:focus, select:focus {
   flex-direction: column; 
 }
 
-/* Хинт при ошибке */
-.hint {
-  display: none;
-  margin-top: 6px;
+/* Хинт (сообщение об ошибке) */
+.checkbox-row .hint {
+  position: absolute; /* закрепляем поверх контейнера */
+  bottom: -20px;      /* отступ под чекбоксами, регулируй по размеру */
+  left: 0;
   color: #b91c1c;
   background: #fee2e2;
   border: 1px solid #fecaca;
-  padding: 6px 8px;
+  padding: 4px 6px;
   border-radius: 6px;
   font-size: 13px;
   width: 100%;
   box-sizing: border-box;
+  display: none;      /* скрыто по умолчанию */
+  z-index: 10;
 }
-.hint.show { display: block; }
+
+/* Показываем хинт */
+.checkbox-row.error .hint {
+  display: block;
+}
+
+/* Чекбоксы не съезжают при ошибке */
+.checkbox-row.error {
+  /* можно оставить border-radius, padding, но убрать динамическое изменение высоты */
+  padding-bottom: 24px; /* заранее зарезервированное место для хинта */
+}
 
 /* Кнопки */
 .buttons {
