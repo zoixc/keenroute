@@ -1,44 +1,32 @@
-const CACHE_NAME = "keenroute-cache-v7"; // новая версия кеша
-const STATIC_PATHS = [
-  "/", 
+const CACHE_NAME = "keenroute-cache-v7";
+const urlsToCache = [
+  "/",
   "/static/manifest.json",
   "/static/css/style.css",
+  "/static/fonts/conquera-bold.woff2",
   "/static/fonts/conquera-bold.woff",
+  "/static/fonts/IBMPlexSans-Regular.woff2",
   "/static/fonts/IBMPlexSans-Regular.woff",
-  "/static/img/favicon-32.ico",
   "/static/img/icon-72.png",
   "/static/img/icon-192.png",
   "/static/img/icon-512.png",
   "/static/img/icon-512-maskable.png"
 ];
 
-// Установка и кэширование ресурсов
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_PATHS))
-  );
-  self.skipWaiting();
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
 });
 
-// Активация: удаляем старые кеши
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      )
+      Promise.all(keys.map(key => {
+        if (key !== CACHE_NAME) return caches.delete(key);
+      }))
     )
   );
-  self.clients.claim();
 });
 
-// Перехват fetch-запросов и отдача из кеша
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
+  event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
 });
