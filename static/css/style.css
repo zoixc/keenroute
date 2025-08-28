@@ -245,6 +245,11 @@ code {
   opacity: 1;
 }
 
+#result_v4, #result_v6 {
+  font-size: 16px; /* тут задаёшь нужный размер */
+  line-height: 1.2; /* можно подправить расстояние между строк */
+}
+
 /* Адаптив под мобильные */
 @media (max-width: 820px) {
   .row { flex-direction: column; gap: 12px; }
