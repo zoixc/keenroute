@@ -1,23 +1,35 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Keenroute</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-  <meta name="theme-color" content="#3b82f6">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#3b82f6" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}" />
+  <!-- Highlight.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
-  <script>hljs.highlightAll();</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+  <script>window.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+  <!-- PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('{{ url_for('static', filename='service-worker.js') }}')
+          .then(reg => console.log('Service Worker registered', reg))
+          .catch(err => console.log('Service Worker failed', err));
+      });
+    }
+  </script>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Keenroute Logo" class="logo">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Keenroute Logo" class="logo" />
       <h2>Keenroute</h2>
     </div>
 
-    <form method="post" onsubmit="saveForm()">
+    <form id="routeForm" method="post">
       <label for="domains">Домены (по одному в строке):</label>
       <textarea name="domains" id="domains">{{ domains }}</textarea>
 
@@ -31,17 +43,26 @@
       <div class="row">
         <div class="field-group">
           <label for="gateway">Шлюз (gateway):</label>
-          <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
+          <input type="text" name="gateway" id="gateway" value="{{ gateway }}" />
         </div>
         <div class="field-group">
           <label for="mask">Маска сети (авто / по умолчанию):</label>
-          <input type="text" name="mask" id="mask" value="{{ mask }}">
+          <input type="text" name="mask" id="mask" value="{{ mask }}" />
         </div>
       </div>
 
-      <div class="checkbox-row">
-        <label><input type="checkbox" id="ipv4" name="ipv4" {% if ipv4 %}checked{% endif %} checked> Включить IPv4</label>
-        <label><input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}> Включить IPv6</label>
+      <div class="checkbox-row" id="ipChecks">
+        <label class="check">
+          <input type="checkbox" id="ipv4" name="ipv4" {% if ipv4 %}checked{% endif %} />
+          <span>Включить IPv4</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %} />
+          <span>Включить IPv6</span>
+        </label>
+        <div id="hint" class="hint" role="alert" aria-live="polite">
+          Выберите хотя бы один стек (IPv4 или IPv6), иначе маршруты не сгенерируются.
+        </div>
       </div>
 
       <div class="buttons">
@@ -53,41 +74,105 @@
     </form>
 
     {% if result_v4 %}
-    <h3>Сгенерированные строки (IPv4):</h3>
-    <pre><code class="language-batch" id="result_v4">{{ result_v4 }}</code></pre>
-    <button class="copy" onclick="copyToClipboard('result_v4')">Копировать IPv4</button>
+      <h3>Сгенерированные строки (IPv4):</h3>
+      <pre><code class="language-dos" id="result_v4">{{ result_v4 }}</code></pre>
+      <button class="copy" onclick="copyToClipboard('result_v4')">Копировать IPv4</button>
     {% endif %}
 
     {% if result_v6 %}
-    <h3>Сгенерированные строки (IPv6):</h3>
-    <pre><code class="language-batch" id="result_v6">{{ result_v6 }}</code></pre>
-    <button class="copy" onclick="copyToClipboard('result_v6')">Копировать IPv6</button>
+      <h3>Сгенерированные строки (IPv6):</h3>
+      <pre><code class="language-dos" id="result_v6">{{ result_v6 }}</code></pre>
+      <button class="copy" onclick="copyToClipboard('result_v6')">Копировать IPv6</button>
     {% endif %}
   </div>
 
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <script>
-    function copyToClipboard(id) {
-      const text = document.getElementById(id).innerText.trim();
-      navigator.clipboard.writeText(text).then(() => alert("Скопировано!"));
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
     }
 
-    function saveForm() {
+    function copyToClipboard(id) {
+      const el = document.getElementById(id);
+      if (!el) { showToast('Нечего копировать'); return; }
+      const text = el.innerText.trim();
+      if (!text) { showToast('Пусто'); return; }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+          .then(() => showToast('Скопировано'))
+          .catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('Скопировано');
+      } catch (e) {
+        alert('Не удалось скопировать: ' + e);
+      }
+      document.body.removeChild(ta);
+    }
+
+    // Валидация чекбоксов + сохранение формы
+    const form = document.getElementById('routeForm');
+    form.addEventListener('submit', function(e) {
+      const v4 = document.getElementById('ipv4').checked;
+      const v6 = document.getElementById('ipv6').checked;
+      if (!v4 && !v6) {
+        e.preventDefault();
+        const hint = document.getElementById('hint');
+        hint.classList.add('show');
+        document.getElementById('ipChecks').classList.add('error');
+        showToast('Выберите IPv4 или IPv6');
+        return false;
+      }
+      // save
       localStorage.setItem("domains", document.getElementById("domains").value);
       localStorage.setItem("gateway", document.getElementById("gateway").value);
       localStorage.setItem("mask", document.getElementById("mask").value);
       localStorage.setItem("ipv4", document.getElementById("ipv4").checked);
       localStorage.setItem("ipv6", document.getElementById("ipv6").checked);
       localStorage.setItem("route_type", document.getElementById("route_type").value);
-    }
+    });
 
-    window.onload = function() {
+    // Восстановление состояния
+    window.addEventListener('load', () => {
       if (localStorage.getItem("domains")) document.getElementById("domains").value = localStorage.getItem("domains");
       if (localStorage.getItem("gateway")) document.getElementById("gateway").value = localStorage.getItem("gateway");
       if (localStorage.getItem("mask")) document.getElementById("mask").value = localStorage.getItem("mask");
-      if (localStorage.getItem("ipv4") === "true") document.getElementById("ipv4").checked = true;
-      if (localStorage.getItem("ipv6") === "true") document.getElementById("ipv6").checked = true;
-      if (localStorage.getItem("route_type")) document.getElementById("route_type").value = localStorage.getItem("route_type");
-    };
+
+      const st4 = localStorage.getItem("ipv4");
+      const st6 = localStorage.getItem("ipv6");
+      if (st4 !== null) document.getElementById("ipv4").checked = (st4 === "true");
+      if (st6 !== null) document.getElementById("ipv6").checked = (st6 === "true");
+
+      const rt = localStorage.getItem("route_type");
+      if (rt) document.getElementById("route_type").value = rt;
+
+      // убираем подсветку ошибки при изменении чекбоксов
+      ['ipv4','ipv6'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+          document.getElementById('hint').classList.remove('show');
+          document.getElementById('ipChecks').classList.remove('error');
+        });
+      });
+    });
   </script>
 </body>
 </html>
