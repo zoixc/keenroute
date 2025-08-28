@@ -28,8 +28,19 @@
 </head>
 <body>
 <div class="container">
+
+  <!-- Flash-сообщения -->
+  {% with messages = get_flashed_messages(category_filter=["warning"]) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for msg in messages %}
+          <div class="flash flash-warning">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
   <div class="header">
-    <!--<img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="logo"-->
     <h2><span class="keen">Keen</span><span class="route">route</span></h2>
   </div>
 
