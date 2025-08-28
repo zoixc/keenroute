@@ -223,7 +223,7 @@ button {
   cursor: pointer;
   transition: background .15s, transform .05s;
 }
-button:hover { background: #237cb5; }
+button:hover { background: #ecf5fa; }
 /* button:active { transform: translateY(1px); } */
 
 button.copy {
