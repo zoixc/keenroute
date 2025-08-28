@@ -84,6 +84,7 @@ label {
   margin-top: 14px;
   font-weight: 600;
   color: #6e6e6e;
+  line-height: 1.4; 
 }
 
 textarea, input[type="text"], select {
@@ -137,6 +138,7 @@ textarea:focus, input:focus, select:focus {
   margin-top: 4px;
   color: #374151;
   font-size: 13px;
+  line-height: 1.4; 
 }
 
 /* Чекбоксы IPv4/IPv6 */
@@ -155,6 +157,7 @@ textarea:focus, input:focus, select:focus {
   align-items: center;
   gap: 6px;
   font-weight: 500;
+  line-height: 1.4; 
   cursor: pointer;
 }
 
@@ -177,6 +180,7 @@ textarea:focus, input:focus, select:focus {
   padding: 4px 6px;
   border-radius: 4px;
   font-size: 13px;
+  line-height: 1.4; 
 }
 
 .checkbox-row.error .hint {
