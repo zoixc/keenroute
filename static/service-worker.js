@@ -1,4 +1,4 @@
-const CACHE_NAME = "keenroute-cache-v7";
+const CACHE_NAME = "keenroute-cache-v9";
 const urlsToCache = [
   "/",
   "/static/manifest.json",
