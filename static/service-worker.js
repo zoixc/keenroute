@@ -1,10 +1,11 @@
-const CACHE_NAME = "keenroute-cache-v6"; // версия кеша
+const CACHE_NAME = "keenroute-cache-v7"; // новая версия кеша
 const STATIC_PATHS = [
-  "/",
+  "/", 
   "/static/manifest.json",
   "/static/css/style.css",
   "/static/fonts/conquera-bold.woff",
   "/static/fonts/IBMPlexSans-Regular.woff",
+  "/static/img/favicon-32.ico",
   "/static/img/icon-72.png",
   "/static/img/icon-192.png",
   "/static/img/icon-512.png",
@@ -16,6 +17,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_PATHS))
   );
+  self.skipWaiting();
 });
 
 // Активация: удаляем старые кеши
@@ -24,11 +26,14 @@ self.addEventListener("activate", (event) => {
     caches.keys().then(keys =>
       Promise.all(
         keys.map(key => {
-          if (key !== CACHE_NAME) return caches.delete(key);
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
         })
       )
     )
   );
+  self.clients.claim();
 });
 
 // Перехват fetch-запросов и отдача из кеша
