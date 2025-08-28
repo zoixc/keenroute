@@ -71,6 +71,8 @@ h2 {
   font-weight: 700;
   font-size: 1.8rem;
   margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--primary-color);
 }
 
 h2 .keen { color: var(--primary-color); }
