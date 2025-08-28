@@ -12,6 +12,12 @@ def resolve_domain(domain, ipv6=False):
     except socket.gaierror:
         return []
 
+@app.route('/static/fonts/<path:filename>')
+def fonts(filename):
+    response = send_from_directory('static/fonts', filename)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, route_type="host"):
     """
     Возвращает строки маршрутов и набор IP/сетей.
