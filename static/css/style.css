@@ -63,7 +63,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 h2 {
@@ -279,6 +279,13 @@ code {
 h3 {
   font-size: 14px;
   font-weight: 600; 
+}
+
+.flash-messages {
+  min-height: 2rem; /* место под сообщение */
+}
+.flash-messages:empty {
+  min-height: 0; /* если пусто — ничего не занимает */
 }
 
 /* Адаптив под мобильные */
