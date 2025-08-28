@@ -169,10 +169,10 @@ textarea:focus, input:focus, select:focus {
 /* Ошибка — рамка отключена, чтобы ничего не съезжало */
 .checkbox-row.error {
   /* border: 1px dashed #ef4444; */ /* отключено */
-/*  border-radius: 8px;
+  border-radius: 8px;
   padding: 8px;
   flex-direction: column; 
-} */
+}
 
 /* Хинт (сообщение об ошибке) — отключен, можно оставить скрытым */
 .checkbox-row .hint {
