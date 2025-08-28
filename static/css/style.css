@@ -90,20 +90,22 @@ textarea, input[type="text"], select {
   width: 100%;
   margin-top: 8px;
   padding: 10px 12px;
-  border: 1px solid #6e6e6e;
+  border: 1px solid #919191;
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
   background: #fff;
-  transition: border-color .15s; /* box-shadow .15s; */
+  transition: border-color .5s; /* box-shadow .15s; */
+  line-height: 1.4; 
 }
 
 textarea {
   min-height: 100px;
   resize: vertical;          
   overflow-y: auto;
-  border: 1px solid #6e6e6e
+  border: 1px solid #919191
   border-radius: 4px;
+  line-height: 1.4; 
 }
 
 textarea:focus, input:focus, select:focus {
@@ -113,6 +115,7 @@ textarea:focus, input:focus, select:focus {
   border-color: #309DD8;
 /*  box-shadow: 0 0 0 2px rgba(0,0,0,0.1); */
   border-radius: 4px;
+  line-height: 1.4; 
 }
 
 /* Gateway и Mask */
