@@ -184,7 +184,7 @@ textarea:focus, input:focus, select:focus {
 }
 
 /* Кнопки */
-.buttons {
+/*.buttons {
   display: flex;
   gap: 12px;
   margin-top: 18px;
@@ -203,12 +203,34 @@ button {
   transition: background .15s, transform .05s;
 }
 button:hover { background: #237cb5; }
-button:active { transform: translateY(1px); }
+/* button:active { transform: translateY(1px); } */
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+button {
+  font-size: 14px;
+  appearance: none;
+  border: 1px solid #c1dded;
+  padding: 10px 16px;
+  border-radius: 4px;
+  background: #fff;
+  color: #0097dc;
+  cursor: pointer;
+  transition: background .15s, transform .05s;
+}
+button:hover { background: #237cb5; }
+/* button:active { transform: translateY(1px); } */
 
 button.copy {
-  background: var(--primary-color);
+  border: 1px solid #c1dded;
+  background: #fff;
 }
-button.copy:hover { background: #237cb5; }
+button.copy:hover { background: #ecf5fa; }
 
 /* Блоки кода */
 pre {
