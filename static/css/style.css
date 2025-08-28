@@ -139,10 +139,6 @@ textarea:focus, input:focus, select:focus {
   font-size: 13px;
 }
 
-#prefix_ipv6 {
-  margin-bottom: 4px;
-}
-
 /* Чекбоксы IPv4/IPv6 */
 .checkbox-row {
   display: flex;
