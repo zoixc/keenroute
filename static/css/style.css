@@ -145,7 +145,7 @@ textarea:focus, input:focus, select:focus {
   flex-direction: column; /* чекбоксы в столбик */
   gap: 6px;
   margin-top: 6px;
-  min-height: 48px; /* зарезервированное место под хинт */
+/*  min-height: 48px; /* зарезервированное место под хинт */
   box-sizing: border-box;
 }
 
@@ -167,12 +167,12 @@ textarea:focus, input:focus, select:focus {
 }
 
 /* Ошибка — рамка отключена, чтобы ничего не съезжало */
-.checkbox-row.error {
+/* .checkbox-row.error {
   /* border: 1px dashed #ef4444; */ /* отключено */
 /*  border-radius: 8px;
   padding: 8px;
   flex-direction: column; 
-}
+} /*
 
 /* Хинт (сообщение об ошибке) — отключен, можно оставить скрытым */
 .checkbox-row .hint {
