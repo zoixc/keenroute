@@ -15,6 +15,7 @@ def resolve_domain(domain, ipv6=False):
 def generate_routes(domains, gateway, mask, ipv6=False, route_type="host"):
     """
     Возвращает плоский текст маршрутов, набор IP и флаг некорректной маски.
+    IPv6 всегда использует корректные префиксы (/128 для host, /64 для network).
     """
     lines = []
     ips_collected = set()
@@ -30,31 +31,41 @@ def generate_routes(domains, gateway, mask, ipv6=False, route_type="host"):
                 lines.append(f"route add 0.0.0.0 mask 0.0.0.0 {gateway} :: rem default")
                 ips_collected.add("0.0.0.0")
             else:
-                lines.append(f"route add ::/0 mask 0.0.0.0 {gateway} :: rem default IPv6")
+                lines.append(f"route add ::/0 {gateway} :: rem default IPv6")
                 ips_collected.add("::/0")
             continue
 
         ips = resolve_domain(domain, ipv6=ipv6)
         for ip in ips:
             try:
-                if route_type == "host":
-                    line_mask = "255.255.255.255"
-                    route_ip = ip
-                elif route_type == "network":
-                    line_mask = mask if mask else "255.255.255.0"
-                    try:
-                        net = ipaddress.ip_network(f"{ip}/{line_mask}", strict=False)
-                        route_ip = str(net.network_address)
-                        line_mask = str(net.netmask)
-                    except ValueError:
-                        invalid_mask = True
-                        # fallback на /24
-                        net = ipaddress.ip_network(f"{ip}/24", strict=False)
-                        route_ip = str(net.network_address)
-                        line_mask = str(net.netmask)
-
-                lines.append(f"route add {route_ip} mask {line_mask} {gateway} :: rem {domain}")
-                ips_collected.add(route_ip)
+                if ipv6:
+                    # Для IPv6 префиксы всегда /128 для host и /64 для network
+                    if route_type == "host":
+                        route_ip = ip
+                        line_mask = "/128"
+                    elif route_type == "network":
+                        route_ip = str(ipaddress.ip_network(f"{ip}/64", strict=False).network_address)
+                        line_mask = "/64"
+                    lines.append(f"route add {route_ip} {line_mask} {gateway} :: rem {domain}")
+                    ips_collected.add(route_ip)
+                else:
+                    # IPv4
+                    if route_type == "host":
+                        line_mask = "255.255.255.255"
+                        route_ip = ip
+                    elif route_type == "network":
+                        line_mask = mask if mask else "255.255.255.0"
+                        try:
+                            net = ipaddress.ip_network(f"{ip}/{line_mask}", strict=False)
+                            route_ip = str(net.network_address)
+                            line_mask = str(net.netmask)
+                        except ValueError:
+                            invalid_mask = True
+                            net = ipaddress.ip_network(f"{ip}/24", strict=False)
+                            route_ip = str(net.network_address)
+                            line_mask = str(net.netmask)
+                    lines.append(f"route add {route_ip} mask {line_mask} {gateway} :: rem {domain}")
+                    ips_collected.add(route_ip)
 
             except Exception as e:
                 print(f"Ошибка при обработке {domain}: {e}")
