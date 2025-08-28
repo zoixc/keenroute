@@ -90,7 +90,7 @@ textarea, input[type="text"], select {
   width: 100%;
   margin-top: 8px;
   padding: 10px 12px;
-  border: 1px solid #309DD8;
+  border: 1px solid #474747;
   border-radius: 4px;
   font-size: 14px;
   box-sizing: border-box;
@@ -102,7 +102,7 @@ textarea {
   min-height: 100px;
   resize: vertical;          
   overflow-y: auto;
-  border: 1px solid #3b3b3b
+  border: 1px solid #309DD8
   border-radius: 4px;
 }
 
@@ -110,7 +110,7 @@ textarea:focus, input:focus, select:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(48, 157, 216, .15);
-  border-color: #3b3b3b;
+  border-color: #309DD8;
   box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
   border-radius: 4px;
 }
