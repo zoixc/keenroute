@@ -1,93 +1,93 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keenroute</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('{{ url_for('static', filename='service-worker.js') }}')
-            .then(reg => console.log('Service Worker registered', reg))
-            .catch(err => console.log('Service Worker failed', err));
-        });
-      }
-    </script>
+  <meta charset="UTF-8">
+  <title>Keenroute</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <meta name="theme-color" content="#3b82f6">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+  <script>hljs.highlightAll();</script>
 </head>
 <body>
-<div class="container">
-  <h2>Keenroute</h2>
-  <form method="post" onsubmit="saveForm()">
-    <label for="domains">Домены (по одному в строке):</label>
-    <textarea name="domains" id="domains">{{ domains }}</textarea>
+  <div class="container">
+    <div class="header">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Keenroute Logo" class="logo">
+      <h2>Keenroute</h2>
+    </div>
 
-    <label for="route_type">Тип маршрута:</label>
-    <select name="route_type" id="route_type">
-      <option value="host" {% if route_type=="host" %}selected{% endif %}>Host (узел)</option>
-      <option value="network" {% if route_type=="network" %}selected{% endif %}>Network (сеть)</option>
-      <option value="default" {% if route_type=="default" %}selected{% endif %}>Default (по умолчанию)</option>
-    </select>
+    <form method="post" onsubmit="saveForm()">
+      <label for="domains">Домены (по одному в строке):</label>
+      <textarea name="domains" id="domains">{{ domains }}</textarea>
 
-    <div class="row">
-      <div class="field-group">
-        <label for="gateway">Шлюз (gateway):</label>
-        <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
+      <label for="route_type">Тип маршрута:</label>
+      <select name="route_type" id="route_type">
+        <option value="host" {% if route_type=="host" %}selected{% endif %}>Host (узел)</option>
+        <option value="network" {% if route_type=="network" %}selected{% endif %}>Network (сеть)</option>
+        <option value="default" {% if route_type=="default" %}selected{% endif %}>Default (по умолчанию)</option>
+      </select>
+
+      <div class="row">
+        <div class="field-group">
+          <label for="gateway">Шлюз (gateway):</label>
+          <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
+        </div>
+        <div class="field-group">
+          <label for="mask">Маска сети (авто / по умолчанию):</label>
+          <input type="text" name="mask" id="mask" value="{{ mask }}">
+        </div>
       </div>
-      <div class="field-group">
-        <label for="mask">Маска сети (авто / по умолчанию):</label>
-        <input type="text" name="mask" id="mask" value="{{ mask }}">
+
+      <div class="checkbox-row">
+        <label><input type="checkbox" id="ipv4" name="ipv4" {% if ipv4 %}checked{% endif %} checked> Включить IPv4</label>
+        <label><input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}> Включить IPv6</label>
       </div>
-    </div>
 
-    <div class="checkbox-row">
-      <label for="ipv6">Включить IPv6</label>
-      <input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}>
-    </div>
+      <div class="buttons">
+        <button type="submit" name="action" value="generate">Сгенерировать</button>
+        {% if result_v4 or result_v6 %}
+        <button type="submit" name="action" value="download">Скачать .bat</button>
+        {% endif %}
+      </div>
+    </form>
 
-    <div class="buttons">
-      <button type="submit" name="action" value="generate">Сгенерировать</button>
-      {% if result_v4 or result_v6 %}
-      <button type="submit" name="action" value="download">Скачать .bat</button>
-      {% endif %}
-    </div>
-  </form>
+    {% if result_v4 %}
+    <h3>Сгенерированные строки (IPv4):</h3>
+    <pre><code class="language-batch" id="result_v4">{{ result_v4 }}</code></pre>
+    <button class="copy" onclick="copyToClipboard('result_v4')">Копировать IPv4</button>
+    {% endif %}
 
-  {% if result_v4 %}
-  <h3>IPv4 маршруты:</h3>
-  <pre id="result_v4">{{ result_v4|safe }}</pre>
-  <button class="copy-btn" onclick="copyToClipboard('result_v4')">Скопировать IPv4</button>
-  {% endif %}
+    {% if result_v6 %}
+    <h3>Сгенерированные строки (IPv6):</h3>
+    <pre><code class="language-batch" id="result_v6">{{ result_v6 }}</code></pre>
+    <button class="copy" onclick="copyToClipboard('result_v6')">Копировать IPv6</button>
+    {% endif %}
+  </div>
 
-  {% if result_v6 %}
-  <h3>IPv6 маршруты:</h3>
-  <pre id="result_v6">{{ result_v6|safe }}</pre>
-  <button class="copy-btn" onclick="copyToClipboard('result_v6')">Скопировать IPv6</button>
-  {% endif %}
-</div>
+  <script>
+    function copyToClipboard(id) {
+      const text = document.getElementById(id).innerText.trim();
+      navigator.clipboard.writeText(text).then(() => alert("Скопировано!"));
+    }
 
-<script>
-function copyToClipboard(id) {
-  const text = document.getElementById(id).innerText.trim();
-  navigator.clipboard.writeText(text).then(() => alert("Скопировано!"));
-}
+    function saveForm() {
+      localStorage.setItem("domains", document.getElementById("domains").value);
+      localStorage.setItem("gateway", document.getElementById("gateway").value);
+      localStorage.setItem("mask", document.getElementById("mask").value);
+      localStorage.setItem("ipv4", document.getElementById("ipv4").checked);
+      localStorage.setItem("ipv6", document.getElementById("ipv6").checked);
+      localStorage.setItem("route_type", document.getElementById("route_type").value);
+    }
 
-function saveForm() {
-  localStorage.setItem("domains", document.getElementById("domains").value);
-  localStorage.setItem("gateway", document.getElementById("gateway").value);
-  localStorage.setItem("mask", document.getElementById("mask").value);
-  localStorage.setItem("ipv6", document.getElementById("ipv6").checked);
-  localStorage.setItem("route_type", document.getElementById("route_type").value);
-}
-
-window.onload = function() {
-  if (localStorage.getItem("domains")) document.getElementById("domains").value = localStorage.getItem("domains");
-  if (localStorage.getItem("gateway")) document.getElementById("gateway").value = localStorage.getItem("gateway");
-  if (localStorage.getItem("mask")) document.getElementById("mask").value = localStorage.getItem("mask");
-  if (localStorage.getItem("ipv6") === "true") document.getElementById("ipv6").checked = true;
-};
-</script>
+    window.onload = function() {
+      if (localStorage.getItem("domains")) document.getElementById("domains").value = localStorage.getItem("domains");
+      if (localStorage.getItem("gateway")) document.getElementById("gateway").value = localStorage.getItem("gateway");
+      if (localStorage.getItem("mask")) document.getElementById("mask").value = localStorage.getItem("mask");
+      if (localStorage.getItem("ipv4") === "true") document.getElementById("ipv4").checked = true;
+      if (localStorage.getItem("ipv6") === "true") document.getElementById("ipv6").checked = true;
+      if (localStorage.getItem("route_type")) document.getElementById("route_type").value = localStorage.getItem("route_type");
+    };
+  </script>
 </body>
 </html>
