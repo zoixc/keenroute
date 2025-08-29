@@ -109,7 +109,7 @@ textarea {
   line-height: 1.4; 
 }
 
-textarea:hover {
+textarea:hover, input:hover, select:hover {
   border-color: #309DD8;
 }
 
@@ -127,10 +127,6 @@ textarea:focus, input:focus, select:focus {
 .row {
   display: flex;
   flex-direction: column;
-}
-
-.row:hover, .field-group:hover {
-  border-color: #309DD8;
 }
 
 .field-group {
