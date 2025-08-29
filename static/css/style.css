@@ -158,7 +158,7 @@ textarea:focus, input:focus, select:focus {
 #networkSettings {
   display: flex;
   flex-direction: column; /* просто ставим поля вертикально */
-  gap: 0.5rem;            /* расстояние между полями */
+/*  gap: 0.5rem;            /* расстояние между полями */
 }
 
 /* Подсказка для IPv6 */
