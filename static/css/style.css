@@ -12,7 +12,7 @@
   font-family: 'IBM';
   src: url('/static/fonts/ibmplexsans-regular.woff2') format('woff2'),
        url('/static/fonts/ibmplexsans-regular.woff') format('woff');
-  font-weight: 400;
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
@@ -20,7 +20,7 @@
 @font-face {
   font-family: 'Heebo';
   src: url('/static/fonts/heebocyrillic.woff2') format('woff2');
-  font-weight: 400;
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
