@@ -221,7 +221,7 @@ textarea:focus, input:focus, select:focus {
 
 #comment_checkbox {
   margin-top: -0.2rem;
-  margin-bottom: 2px;
+  margin-bottom: 5px;
 }
 
 .checkbox-row.error .hint {
