@@ -129,6 +129,10 @@ textarea:focus, input:focus, select:focus {
   flex-direction: column;
 }
 
+.row:hover, .field-group:hover {
+  border-color: #309DD8;
+}
+
 .field-group {
   display: flex;
   flex-direction: column;
