@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, Response, flash, send_from_directory
+from urllib.parse import urlparse
 import socket
 import ipaddress
 import mimetypes
@@ -20,9 +21,19 @@ def fonts(filename):
     return response
 
 def resolve_domain(domain, ipv6=False):
+    """
+    Возвращает список IP-адресов домена.
+    Работает с доменами с http://, https://, www и без схемы.
+    """
     try:
+        # Добавляем //, чтобы urlparse корректно разбил домен без схемы
+        parsed = urlparse(domain if "://" in domain else f"//{domain}")
+        host = parsed.hostname
+        if not host:
+            return []
+
         family = socket.AF_INET6 if ipv6 else socket.AF_INET
-        return list({res[4][0] for res in socket.getaddrinfo(domain, None, family)})
+        return list({res[4][0] for res in socket.getaddrinfo(host, None, family)})
     except socket.gaierror:
         return []
 
