@@ -5,7 +5,7 @@
 Запуск через docker-compose:
 ```
 services:
-  keenroute:
+  kroute:
     image: ptabi/kroute:latest
     container_name: kroute
     ports:
