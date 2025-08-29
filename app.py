@@ -8,7 +8,7 @@ app.secret_key = "keenroute-secret"
 
 @app.route('/service-worker.js')
 def service_worker():
-    return send_from_directory('.', 'service-worker.js')
+    return send_from_directory('.', 'service-worker.js', mimetype='application/javascript')
 
 @app.route('/static/fonts/<path:filename>')
 def fonts(filename):
