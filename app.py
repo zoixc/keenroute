@@ -51,12 +51,18 @@ def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, 
         if not domain:
             continue
 
+        # Убрать схему из имени для комментария
+        display_name = domain
+        if "://" in domain:
+            parsed = urlparse(domain)
+            display_name = parsed.netloc or parsed.path
+
         if route_type == "default":
             if not ipv6:
-                lines.append(f"route add 0.0.0.0 mask 0.0.0.0 {gateway} :: rem default")
+                lines.append(f"route add 0.0.0.0 mask 0.0.0.0 {gateway} :: rem default ({display_name})")
                 ips_collected.add("0.0.0.0")
             else:
-                lines.append(f"route add ::/0 mask 0.0.0.0 {gateway} :: rem default IPv6")
+                lines.append(f"route add ::/0 mask 0.0.0.0 {gateway} :: rem default IPv6 ({display_name})")
                 ips_collected.add("::/0")
             continue
 
@@ -94,7 +100,7 @@ def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, 
                 print(f"Ошибка при обработке {domain}: {e}")
 
         for net_ip, net_mask in networks:
-            lines.append(f"route add {net_ip} mask {net_mask} {gateway} :: rem {domain}")
+            lines.append(f"route add {net_ip} mask {net_mask} {gateway} :: rem {display_name}")
             ips_collected.add(net_ip)
 
     return "\n".join(lines), ips_collected, invalid_mask
