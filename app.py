@@ -51,18 +51,30 @@ def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, 
         if not domain:
             continue
 
-        # Убрать схему из имени для комментария
-        display_name = domain
-        if "://" in domain:
-            parsed = urlparse(domain)
-            display_name = parsed.netloc or parsed.path
+        # Проверяем, является ли domain IP
+        is_ip = False
+        try:
+            ipaddress.ip_address(domain)
+            is_ip = True
+        except ValueError:
+            pass
+
+        # Для комментария оставляем только домен без схемы, если это не IP
+        display_name = ""
+        if not is_ip:
+            display_name = domain
+            if "://" in domain:
+                parsed = urlparse(domain)
+                display_name = parsed.netloc or parsed.path
 
         if route_type == "default":
             if not ipv6:
-                lines.append(f"route add 0.0.0.0 mask 0.0.0.0 {gateway} :: rem default ({display_name})")
+                comment = f" ({display_name})" if display_name else ""
+                lines.append(f"route add 0.0.0.0 mask 0.0.0.0 {gateway} :: rem default{comment}")
                 ips_collected.add("0.0.0.0")
             else:
-                lines.append(f"route add ::/0 mask 0.0.0.0 {gateway} :: rem default IPv6 ({display_name})")
+                comment = f" ({display_name})" if display_name else ""
+                lines.append(f"route add ::/0 mask 0.0.0.0 {gateway} :: rem default IPv6{comment}")
                 ips_collected.add("::/0")
             continue
 
@@ -100,7 +112,8 @@ def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, 
                 print(f"Ошибка при обработке {domain}: {e}")
 
         for net_ip, net_mask in networks:
-            lines.append(f"route add {net_ip} mask {net_mask} {gateway} :: rem {display_name}")
+            comment = f" ({display_name})" if display_name else ""
+            lines.append(f"route add {net_ip} mask {net_mask} {gateway} :: rem{comment}")
             ips_collected.add(net_ip)
 
     return "\n".join(lines), ips_collected, invalid_mask
@@ -138,16 +151,23 @@ def index():
         action = request.form.get("action")
 
         if ipv4:
-            result_v4, ips_v4, invalid_v4 = generate_routes(domains, gateway, mask_ipv4, prefix_ipv6, ipv6=False, route_type=route_type)
+            result_v4, ips_v4, invalid_v4 = generate_routes(
+                domains, gateway, mask_ipv4, prefix_ipv6, ipv6=False, route_type=route_type
+            )
             if invalid_v4:
                 mask_warning = True
         if ipv6:
-            result_v6, ips_v6, invalid_v6 = generate_routes(domains, gateway, mask_ipv4, prefix_ipv6, ipv6=True, route_type=route_type)
+            result_v6, ips_v6, invalid_v6 = generate_routes(
+                domains, gateway, mask_ipv4, prefix_ipv6, ipv6=True, route_type=route_type
+            )
             if invalid_v6:
                 mask_warning = True
 
         if mask_warning:
-            flash("Некорректная маска/префикс. Используются значения по умолчанию: IPv4 /24, IPv6 /64.", "warning")
+            flash(
+                "Некорректная маска/префикс. Используются значения по умолчанию: IPv4 /24, IPv6 /64.",
+                "warning"
+            )
 
         if action == "download" and (result_v4 or result_v6):
             all_routes = (result_v4 + ("\n" if result_v4 and result_v6 else "") + result_v6).strip()
