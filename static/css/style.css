@@ -219,7 +219,7 @@ textarea:focus, input:focus, select:focus {
   line-height: 1.4; 
 }
 
-.comment_checkbox {
+#comment_checkbox {
   margin-top: 11px;
 }
 
