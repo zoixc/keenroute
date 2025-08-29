@@ -155,6 +155,21 @@ textarea:focus, input:focus, select:focus {
   flex-direction: column;
 }
 
+/* Стили для контейнера networkSettings */
+#networkSettings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* Отступ между полями на ПК */
+}
+
+/* Медиазапрос для мобильных экранов */
+@media (max-width: 600px) {
+  #networkSettings {
+    flex-direction: column; /* Ставим поля друг под другом */
+    gap: 0.5rem;           /* Меньший gap для мобильного */
+  }
+}
+
 /* Подсказка для IPv6 */
 .hint-small {
   display: block;
