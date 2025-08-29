@@ -92,10 +92,12 @@
       <div id="hint" class="hint" role="alert" aria-live="polite">
         Выберите хотя бы один стек (IPv4 или IPv6), иначе маршруты не сгенерируются.
       </div>
-      <label class="check">
-        <input type="checkbox" id="add_comment" name="add_comment" {% if add_comment %}checked{% endif %}>
-        <span>Добавлять комментарии с адресом ресурса в правило</span>
-      </label>
+      <div id="comment_checkbox">
+        <label class="check">
+          <input type="checkbox" id="add_comment" name="add_comment" {% if add_comment %}checked{% endif %}>
+          <span>Добавлять комментарии с адресом ресурса в правило</span>
+        </label>
+      </div>
     </div>
 
     <script>
