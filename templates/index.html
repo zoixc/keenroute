@@ -104,14 +104,18 @@
     function toggleNetworkSettings() {
       const routeType = document.getElementById('route_type').value;
       const networkSettings = document.getElementById('networkSettings');
+    
       if (routeType === 'network') {
         networkSettings.style.display = 'flex';
       } else {
         networkSettings.style.display = 'none';
       }
     }
-    
+
+    // вызываем при загрузке страницы
     window.addEventListener('load', toggleNetworkSettings);
+
+    // и при изменении select
     document.getElementById('route_type').addEventListener('change', toggleNetworkSettings);
     </script>
       
