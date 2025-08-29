@@ -20,6 +20,7 @@ def fonts(filename):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+
 def resolve_domain(domain, ipv6=False):
     """
     Возвращает список IP-адресов домена.
@@ -35,6 +36,14 @@ def resolve_domain(domain, ipv6=False):
         return list({res[4][0] for res in socket.getaddrinfo(host, None, family)})
     except socket.gaierror:
         return []
+
+
+def clean_display_name(domain: str) -> str:
+    """Удаляет схему и скобки из доменного имени для комментариев."""
+    parsed = urlparse(domain if "://" in domain else f"//{domain}")
+    display_name = parsed.netloc or parsed.path or domain
+    return display_name.strip("[]")  # убираем [] у IPv6-адресов
+
 
 def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, route_type="host", add_comment=True):
     """
@@ -59,24 +68,21 @@ def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, 
         except ValueError:
             pass
 
-        # Для комментария оставляем только домен без схемы
+        # Для комментария: чистое доменное имя без схемы
         display_name = ""
-        if not is_ip:
-            display_name = domain
-            if "://" in domain:
-                parsed = urlparse(domain)
-                display_name = parsed.netloc or parsed.path
+        if not is_ip and add_comment:
+            display_name = clean_display_name(domain)
 
         # default-маршруты
         if route_type == "default":
             if not ipv6:
-                if add_comment and display_name:
+                if display_name:
                     lines.append(f"route add 0.0.0.0 mask 0.0.0.0 {gateway} :: rem {display_name}")
                 else:
                     lines.append(f"route add 0.0.0.0 mask 0.0.0.0 {gateway}")
                 ips_collected.add("0.0.0.0")
             else:
-                if add_comment and display_name:
+                if display_name:
                     lines.append(f"route add ::/0 mask 0.0.0.0 {gateway} :: rem {display_name}")
                 else:
                     lines.append(f"route add ::/0 mask 0.0.0.0 {gateway}")
@@ -116,13 +122,14 @@ def generate_routes(domains, gateway, mask_ipv4="", prefix_ipv6=64, ipv6=False, 
                 print(f"Ошибка при обработке {domain}: {e}")
 
         for net_ip, net_mask in networks:
-            if not is_ip and add_comment and display_name:
+            if display_name:
                 lines.append(f"route add {net_ip} mask {net_mask} {gateway} :: rem {display_name}")
             else:
                 lines.append(f"route add {net_ip} mask {net_mask} {gateway}")
             ips_collected.add(net_ip)
 
     return "\n".join(lines), ips_collected, invalid_mask
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -160,13 +167,15 @@ def index():
 
         if ipv4:
             result_v4, ips_v4, invalid_v4 = generate_routes(
-                domains, gateway, mask_ipv4, prefix_ipv6, ipv6=False, route_type=route_type, add_comment=add_comment
+                domains, gateway, mask_ipv4, prefix_ipv6, ipv6=False,
+                route_type=route_type, add_comment=add_comment
             )
             if invalid_v4:
                 mask_warning = True
         if ipv6:
             result_v6, ips_v6, invalid_v6 = generate_routes(
-                domains, gateway, mask_ipv4, prefix_ipv6, ipv6=True, route_type=route_type, add_comment=add_comment
+                domains, gateway, mask_ipv4, prefix_ipv6, ipv6=True,
+                route_type=route_type, add_comment=add_comment
             )
             if invalid_v6:
                 mask_warning = True
@@ -204,6 +213,7 @@ def index():
         route_type=route_type,
         add_comment=add_comment
     )
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
