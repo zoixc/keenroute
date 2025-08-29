@@ -209,13 +209,13 @@ textarea:focus, input:focus, select:focus {
  .checkbox-row .hint {
   display: block;          /* всегда блок */
 /*  visibility: hidden;      /* скрыт по умолчанию */
-  margin-top: 10px;
+  margin-top: 14px;
   color: #686868;
   background: #fafafa;
   border: 1px solid #ededed;
   padding: 4px 6px;
   border-radius: 4px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4; 
 }
 
