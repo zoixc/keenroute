@@ -81,7 +81,7 @@ h2 .route { color: var(--text-color-light); }
 /* Формы */
 label {
   display: block;
-  margin-top: 14px;
+/*  margin-top: 14px; */
   font-weight: 600;
   color: #6e6e6e;
   line-height: 1.4; 
