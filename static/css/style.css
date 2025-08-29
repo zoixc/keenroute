@@ -1,8 +1,17 @@
 /* --- PWA fonts fix --- */
 @font-face {
-  font-family: 'Conquera';
+  font-family: 'Conquera Bold';
   src: url('/static/fonts/conquera-bold.woff2') format('woff2'),
        url('/static/fonts/conquera-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Conquera Light';
+  src: url('/static/fonts/conquera-light.woff2') format('woff2'),
+       url('/static/fonts/conquera-light.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -67,14 +76,20 @@ body {
 }
 
 h2 {
-  font-family: 'Conquera', sans-serif;
   font-weight: 700;
   font-size: 1.8rem;
   margin: 0;
 }
 
-h2 .keen { color: var(--primary-color); }
-h2 .route { color: var(--text-color-light); }
+h2 .keen {
+  font-family: 'Conquera Bold', sans-serif;
+  color: var(--primary-color);
+}
+
+h2 .route {
+  font-family: 'Conquera Light', sans-serif;
+  color: var(--text-color-light);
+}
 
 .logo { width: 36px; height: 36px; }
 
