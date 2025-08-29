@@ -155,18 +155,25 @@ textarea:focus, input:focus, select:focus {
   flex-direction: column;
 }
 
-/* Стили для контейнера networkSettings */
 #networkSettings {
   display: flex;
+  gap: 1rem;
   flex-wrap: wrap;
-  gap: 1rem; /* Отступ между полями на ПК */
 }
 
-/* Медиазапрос для мобильных экранов */
+#networkSettings .field-group {
+  flex: 1 1 0;  /* flex-grow:1, flex-shrink:1, flex-basis:0 */
+  min-width: 0; /* чтобы текст не растягивал контейнер */
+}
+
 @media (max-width: 600px) {
   #networkSettings {
-    flex-direction: column; /* Ставим поля друг под другом */
-    gap: 0.5rem;           /* Меньший gap для мобильного */
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  #networkSettings .field-group {
+    flex: none;
+    width: 100%;
   }
 }
 
