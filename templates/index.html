@@ -16,10 +16,11 @@
     <link rel="manifest" href="/static/manifest.json">
 
     <!-- Highlight.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/styles/github.min.css">
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/dos.min.js"></script>
     <script>
-      window.addEventListener('DOMContentLoaded', () => hljs.highlightAll());
+      hljs.highlightAll();
     </script>
 
     <!-- Service Worker -->
@@ -100,13 +101,13 @@
 
   {% if result_v4 %}
     <h3>Сгенерированные строки (IPv4):</h3>
-    <pre><code class="language-cmd" id="result_v4">{{ result_v4 }}</code></pre>
+    <pre><code class="language-dos" id="result_v4">{{ result_v4 }}</code></pre>
     <button class="copy" onclick="copyToClipboard('result_v4')">Копировать IPv4</button>
   {% endif %}
 
   {% if result_v6 %}
     <h3>Сгенерированные строки (IPv6):</h3>
-    <pre><code class="language-cmd" id="result_v6">{{ result_v6 }}</code></pre>
+    <pre><code class="language-dos" id="result_v6">{{ result_v6 }}</code></pre>
     <button class="copy" onclick="copyToClipboard('result_v6')">Копировать IPv6</button>
   {% endif %}
 
