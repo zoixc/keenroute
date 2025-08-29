@@ -6,8 +6,8 @@
 ```
 services:
   keenroute:
-    image: ptabi/keenroute:latest
-    container_name: keenroute
+    image: ptabi/kroute:latest
+    container_name: kroute
     ports:
       - "5000:5000" 
     restart: unless-stopped
