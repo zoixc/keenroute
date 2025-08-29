@@ -156,24 +156,21 @@ textarea:focus, input:focus, select:focus {
 }
 
 #networkSettings {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   gap: 1rem;
-  flex-wrap: wrap;
 }
 
 #networkSettings .field-group {
-  flex: 1 1 0;  /* flex-grow:1, flex-shrink:1, flex-basis:0 */
-  min-width: 0; /* чтобы текст не растягивал контейнер */
+  display: flex;
+  flex-direction: column;
 }
 
+/* Мобильные */
 @media (max-width: 600px) {
   #networkSettings {
-    flex-direction: column;
+    grid-template-columns: 1fr; /* одна колонка */
     gap: 0.5rem;
-  }
-  #networkSettings .field-group {
-    flex: none;
-    width: 100%;
   }
 }
 
