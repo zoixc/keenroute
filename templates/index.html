@@ -175,23 +175,24 @@ function fallbackCopy(text) {
 }
 
 const form = document.getElementById('routeForm');
+
 form.addEventListener('submit', function(e) {
   const v4 = document.getElementById('ipv4').checked;
   const v6 = document.getElementById('ipv6').checked;
-  const addComments = document.getElementById('add_comments').checked;
 
+  // Проверка: если ничего не выбрано
   if (!v4 && !v6) {
-    e.preventDefault(); // остановить отправку формы
+    e.preventDefault();  // останавливаем отправку
+    e.stopPropagation(); // полностью блокируем событие
     const hint = document.getElementById('hint');
     hint.classList.add('show');
     document.getElementById('ipChecks').classList.add('error');
-
-    // задержка не нужна, просто вызываем showToast
     showToast('Выберите IPv4 или IPv6');
-    return; // обязательно завершить обработчик
+    return false; // на всякий случай
   }
 
-  // Сохраняем значения в localStorage
+  // сохраняем настройки
+  const addComments = document.getElementById('add_comments').checked;
   localStorage.setItem("domains", document.getElementById("domains").value);
   localStorage.setItem("gateway", document.getElementById("gateway").value);
   localStorage.setItem("mask_ipv4", document.getElementById("mask_ipv4").value);
