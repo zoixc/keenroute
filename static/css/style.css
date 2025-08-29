@@ -104,12 +104,14 @@ textarea {
   min-height: 100px;
   resize: vertical;          
   overflow-y: auto;
-  border: 1px solid #919191
+  border: 1px solid #919191;
   border-radius: 4px;
   line-height: 1.4; 
 }
 
-textarea:hover { border-color: #309DD8; }
+textarea:hover {
+  border-color: #309DD8;
+}
 
 textarea:focus, input:focus, select:focus {
   outline: none;
