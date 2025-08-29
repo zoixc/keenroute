@@ -6,33 +6,39 @@
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+  -webkit-font-smoothing: antialiased;
 }
 
 @font-face {
   font-family: 'Conquera Light';
   src: url('/static/fonts/conquera-light.woff2') format('woff2'),
        url('/static/fonts/conquera-light.woff') format('woff');
-  font-weight: 700;
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
+  -webkit-font-smoothing: antialiased;
 }
 
 @font-face {
   font-family: 'IBM';
   src: url('/static/fonts/ibmplexsans-regular.woff2') format('woff2'),
        url('/static/fonts/ibmplexsans-regular.woff') format('woff');
-  font-weight: 300;
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
+  -webkit-font-smoothing: antialiased;
 }
 
 @font-face {
   font-family: 'Heebo';
-  src: url('/static/fonts/heebocyrillic.woff2') format('woff2');
-  font-weight: 300;
+  src: url('/static/fonts/heebocyrillic.woff2') format('woff2'),
+       url('/static/fonts/heebocyrillic.woff') format('woff');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
+  -webkit-font-smoothing: antialiased;
 }
+
 
 body, input, textarea, select, button, label {
   font-family: 'Heebo', system-ui, -apple-system, Segoe UI, sans-serif;
