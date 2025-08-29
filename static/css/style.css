@@ -58,7 +58,7 @@ body {
 }
 
 /* Заголовок */
-/*.header {
+.header {
   display: flex;
   align-items: center;
   justify-content: center;
