@@ -235,15 +235,6 @@ button.copy {
 button.copy:hover { background: #ecf5fa; }
 
 /* Блоки кода */
-/* pre {
-  margin-top: 12px;
-  background: #f3f4f6 !important;
-  border-radius: 8px;
-  padding: 14px;
-  overflow: auto;
-  border: 1px solid #e5e7eb;
-} */
-
 pre {
   margin-top: 12px;
   border-radius: 8px;
@@ -260,14 +251,6 @@ pre code.hljs {
   padding: 14px;
   border-radius: 8px;
 }
-
-/* code {
-  font-family: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-/*  font-size: 14px; */
-/*  line-height: 1.4; 
-  display: block;
-  white-space: pre; 
-} */
 
 /* Toast */
 .toast {
