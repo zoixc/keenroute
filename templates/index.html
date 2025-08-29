@@ -179,15 +179,19 @@ form.addEventListener('submit', function(e) {
   const v4 = document.getElementById('ipv4').checked;
   const v6 = document.getElementById('ipv6').checked;
   const addComments = document.getElementById('add_comments').checked;
+
   if (!v4 && !v6) {
-    e.preventDefault();
+    e.preventDefault(); // остановить отправку формы
     const hint = document.getElementById('hint');
     hint.classList.add('show');
     document.getElementById('ipChecks').classList.add('error');
+
+    // задержка не нужна, просто вызываем showToast
     showToast('Выберите IPv4 или IPv6');
-    return false;
+    return; // обязательно завершить обработчик
   }
 
+  // Сохраняем значения в localStorage
   localStorage.setItem("domains", document.getElementById("domains").value);
   localStorage.setItem("gateway", document.getElementById("gateway").value);
   localStorage.setItem("mask_ipv4", document.getElementById("mask_ipv4").value);
