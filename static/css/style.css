@@ -178,6 +178,13 @@ textarea:focus, input:focus, select:focus {
   line-height: 1.4; 
 }
 
+@media (max-width: 665px) {
+  #networkSettings {
+    grid-template-columns: 1fr; /* одна колонка */
+    gap: 0.1rem;
+  }
+}
+
 /* Чекбоксы IPv4/IPv6 */
 .checkbox-row {
   display: flex;
