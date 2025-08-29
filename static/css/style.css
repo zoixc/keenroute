@@ -209,14 +209,18 @@ textarea:focus, input:focus, select:focus {
  .checkbox-row .hint {
   display: block;          /* всегда блок */
 /*  visibility: hidden;      /* скрыт по умолчанию */
-  margin-top: 14px;
+  margin-top: 12px;
   color: #686868;
   background: #fafafa;
   border: 1px solid #ededed;
   padding: 4px 6px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.4; 
+}
+
+.comment_checkbox {
+  margin-top: 11px;
 }
 
 .checkbox-row.error .hint {
