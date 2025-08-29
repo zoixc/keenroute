@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, Response, flash, send_from_directory
 import socket
 import ipaddress
+import mimetypes
 
 app = Flask(__name__)
 app.secret_key = "keenroute-secret"
@@ -12,6 +13,9 @@ def service_worker():
 @app.route('/static/fonts/<path:filename>')
 def fonts(filename):
     response = send_from_directory('static/fonts', filename)
+    mimetype, _ = mimetypes.guess_type(filename)
+    if mimetype:
+        response.headers['Content-Type'] = mimetype
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
