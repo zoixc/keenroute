@@ -86,13 +86,13 @@
         <input type="checkbox" id="ipv6" name="ipv6" {% if ipv6 %}checked{% endif %}>
         <span>IPv6-маршруты</span>
       </label>
+      <div id="hint" class="hint" role="alert" aria-live="polite">
+        Выберите хотя бы один стек (IPv4 или IPv6), иначе маршруты не сгенерируются.
+      </div>
       <label class="check">
         <input type="checkbox" id="add_comment" name="add_comment" {% if add_comment %}checked{% endif %}>
         <span>Добавлять комментарии с адресом ресурса в правило</span>
       </label>
-      <div id="hint" class="hint" role="alert" aria-live="polite">
-        Выберите хотя бы один стек (IPv4 или IPv6), иначе маршруты не сгенерируются.
-      </div>
     </div>
 
     <div class="buttons">
