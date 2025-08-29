@@ -67,13 +67,16 @@
         <label for="gateway">Шлюз (gateway):</label>
         <input type="text" name="gateway" id="gateway" value="{{ gateway }}">
       </div>
-      <div class="field-group">
-        <label for="mask_ipv4">Маска сети IPv4 (по умолчанию 255.255.255.0):</label>
-        <input type="text" name="mask_ipv4" id="mask_ipv4" value="{{ mask_ipv4 }}">
-      </div>
-      <div class="field-group">
-        <label for="prefix_ipv6">Префикс сети IPv6 (по умолчанию /64):</label>
-        <input type="text" name="prefix_ipv6" id="prefix_ipv6" value="{{ prefix_ipv6 }}">
+
+      <div id="networkSettings">
+        <div class="field-group">
+          <label for="mask_ipv4">Маска сети IPv4 (по умолчанию 255.255.255.0):</label>
+          <input type="text" name="mask_ipv4" id="mask_ipv4" value="{{ mask_ipv4 }}">
+        </div>
+        <div class="field-group">
+          <label for="prefix_ipv6">Префикс сети IPv6 (по умолчанию /64):</label>
+          <input type="text" name="prefix_ipv6" id="prefix_ipv6" value="{{ prefix_ipv6 }}">
+        </div>
       </div>
     </div>
 
@@ -95,6 +98,21 @@
       </label>
     </div>
 
+    <script>
+    function toggleNetworkSettings() {
+      const routeType = document.getElementById('route_type').value;
+      const networkSettings = document.getElementById('networkSettings');
+      if (routeType === 'network') {
+        networkSettings.style.display = 'flex';
+      } else {
+        networkSettings.style.display = 'none';
+      }
+    }
+    
+    window.addEventListener('load', toggleNetworkSettings);
+    document.getElementById('route_type').addEventListener('change', toggleNetworkSettings);
+    </script>
+      
     <div class="buttons">
       <button type="submit" name="action" value="generate">Сгенерировать</button>
       {% if result_v4 or result_v6 %}
